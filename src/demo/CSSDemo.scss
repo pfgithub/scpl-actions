@@ -1,0 +1,302 @@
+/* `(?<!\$scale \*) ([0-9]+px)`
+   ` $scale * $1`
+----------------------
+  `\$scale \* 1px`
+  `1px` */
+$scale: 0.5;
+:export {
+	scale: $scale;
+}
+
+.segmentedbutton {
+	background-color: #eeeeee;
+	min-height: $scale * 58px;
+	border-radius: $scale * 15px;
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-auto-flow: column;
+	overflow: hidden;
+	input {
+		position: absolute;
+		left: -9999px;
+		pointer-events: none;
+	}
+	label {
+		border: none;
+		background-color: transparent;
+		font-size: $scale * 22px;
+		margin: $scale * 8px;
+		padding: 0;
+		border-radius: $scale * 15px;
+		transition: 0.1s text-shadow, 0.1s box-shadow, 0.1s background-color,
+			0.1s margin, 0.1s padding;
+		text-align: center;
+		vertical-align: middle;
+		cursor: pointer;
+		display: grid;
+		grid-template-rows: 1fr [center] max-content 1fr;
+		position: relative;
+		& > div {
+			grid-row: center;
+			padding-left: $scale * 8px;
+			padding-right: $scale * 8px;
+		}
+		&:after,
+		&:before {
+			content: "";
+			width: 1px;
+			top: $scale * 6px;
+			bottom: $scale * 6px;
+			position: absolute;
+			transition: 0.1s background-color;
+		}
+		&.rightline:after {
+			background-color: #d6d6d8;
+		}
+		&:after {
+			right: $scale * -8px;
+		}
+		&.leftline:before {
+			background-color: #d6d6d8;
+		}
+		&:before {
+			left: $scale * -8px;
+		}
+	}
+	input:checked + label {
+		margin: $scale * 4px;
+		padding: $scale * 4px;
+		text-shadow: 0 0 1px black;
+		background-color: white;
+		box-shadow: 0 $scale * 4px $scale * 4px rgba(0, 0, 0, 0.2);
+	}
+	input:checked:focus + label {
+		box-shadow: 0 $scale * 4px $scale * 4px rgba(0, 0, 0, 0.2),
+			0 0 $scale * 15px rgba(0, 0, 255, 0.2);
+	}
+	input:focus + label {
+		box-shadow: 0 0 $scale * 15px rgba(0, 0, 255, 0.2);
+	}
+}
+
+@mixin vertical-center {
+	display: grid;
+	grid-template-rows: 1fr [center] max-content 1fr;
+	& > div {
+		grid-row: center;
+	}
+}
+
+.cssdemo {
+	background-color: #efeff2;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	padding: $scale * 50px;
+	font-family: sans-serif;
+	.icon {
+		width: $scale * 40px;
+		height: $scale * 40px;
+		display: inline-block;
+
+		background-image: url(https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Red_x.svg/600px-Red_x.svg.png);
+		background-position: center;
+		background-size: contain;
+		background-repeat: no-repeat;
+		&.download {
+			background-image: url(https://i.imgur.com/8zdJsL3.png);
+		}
+		&.delete {
+			background-image: url(https://i.imgur.com/08e6nna.png);
+		}
+		&.remove {
+			width: $scale * 36px;
+			height: $scale * 36px;
+			background-image: url(https://i.imgur.com/z80ie9S.png);
+		}
+		&.add {
+			width: $scale * 36px;
+			height: $scale * 36px;
+			background-image: url(https://i.imgur.com/KLnbRqD.png);
+		}
+		&.reorder {
+			background-image: url(https://i.imgur.com/y5mqo8Q.png);
+		}
+		&.expandopen {
+			background-image: url(https://i.imgur.com/XoAO3tw.png);
+		}
+		&.expandclosed {
+			background-image: url(https://i.imgur.com/XoAO3tw.png);
+			transform: rotate(-90deg);
+		}
+	}
+	button.icon {
+		cursor: pointer;
+		border: none;
+	}
+	.action {
+		background-color: white;
+		padding: $scale * 24px;
+		border-radius: $scale * 28px;
+		box-shadow: 0 0 $scale * 20px rgba(0, 0, 0, 0.1);
+		overflow-x: hidden;
+		word-wrap: break-word;
+		.dictionaryparameter {
+			position: relative;
+			.dropplaceholder {
+				height: $scale * 88px;
+			}
+		}
+		.parameter {
+			display: grid;
+			margin-left: $scale * 10px;
+			grid-template-columns: [label] max-content 1fr [value] max-content;
+			grid-template-rows: 1fr [center] minmax($scale * 58px, max-content) 1fr;
+			padding-top: $scale * 16px;
+			padding-bottom: $scale * 15px;
+			position: relative;
+			&::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #dbdbdb;
+			}
+			&::after {
+				content: "";
+				position: absolute;
+				bottom: -1px;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background-color: #dbdbdb;
+			}
+			&.dictionary {
+				margin-right: $scale * -24px;
+				margin-left: $scale * -24px;
+				padding-top: $scale * 15px;
+				grid-template-columns: $scale * 34px [remove] max-content $scale * 27px [key] max-content 4fr [line] 1px $scale * 20px [value] max-content 6fr [reorder] max-content $scale * 24px;
+				transition: 0.1s box-shadow;
+				&.dragging {
+					background-color: white;
+					box-shadow: 0 0 $scale * 15px rgba(0, 0, 0, 1);
+					opacity: 0.8;
+					z-index: 1;
+					cursor: move;
+				}
+				.remove {
+					grid-column: remove;
+					grid-row: center;
+					font-size: $scale * 28px;
+					@include vertical-center;
+				}
+				.line {
+					grid-column: line;
+					background-color: #dbdbdb;
+					// height: 100%;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					width: 1px;
+					position: absolute;
+				}
+				.key {
+					grid-column: key;
+					grid-row: center;
+					font-size: $scale * 28px;
+					@include vertical-center;
+				}
+				.value {
+					grid-column: value;
+					grid-row: center;
+					font-size: $scale * 28px;
+					@include vertical-center;
+				}
+				.reorder {
+					grid-column: reorder;
+					grid-row: center;
+					font-size: $scale * 28px;
+					@include vertical-center;
+					cursor: move;
+					touch-action: none;
+				}
+			}
+			&.addnewfield {
+				margin-right: $scale * -24px;
+				grid-template-columns: [add] max-content $scale * 27px [description] max-content 1fr $scale * 24px;
+				.add {
+					grid-column: add;
+					grid-row: center;
+					font-size: $scale * 28px;
+					@include vertical-center;
+				}
+				.description {
+					grid-column: description;
+					grid-row: center;
+					font-size: $scale * 28px;
+					color: #aaaaaa;
+					@include vertical-center;
+				}
+			}
+			&.showmore {
+				color: #8a8a8d;
+				margin-left: $scale * -24px;
+				margin-right: $scale * -24px;
+				grid-template-columns: $scale * 34px [label] max-content 1fr [value] max-content $scale * 24px;
+			}
+			.label {
+				grid-column: label;
+				grid-row: center;
+				font-size: $scale * 28px;
+				@include vertical-center;
+			}
+			.value {
+				grid-column: value;
+				grid-row: center;
+				display: grid;
+				@include vertical-center;
+			}
+		}
+		.title {
+			margin: 0;
+			text-transform: uppercase;
+			color: #949496;
+			font-size: $scale * 23px;
+			display: grid;
+			grid-template-columns: [icon] max-content $scale * 16px [title] max-content 1fr [delete] max-content;
+			.icon.delete {
+				grid-column: delete;
+			}
+			.titletext {
+				grid-column: title;
+				display: grid;
+				grid-template-rows: 1fr max-content 1fr;
+				> div {
+					grid-row: 2;
+					font-weight: lighter;
+				}
+			}
+		}
+		.parametersummary {
+			padding-top: $scale * 27px;
+			padding-bottom: $scale * 27px;
+			padding-left: $scale * 10px;
+			font-size: $scale * 31px;
+			font-weight: 500;
+			.input {
+				background-color: #e5f0fe;
+				border-radius: $scale * 9999px;
+				display: inline;
+				color: #007aff;
+				font-weight: medium;
+				padding-left: $scale * 14px;
+				padding-right: $scale * 14px;
+				line-height: $scale * 53px;
+			}
+		}
+	}
+}
