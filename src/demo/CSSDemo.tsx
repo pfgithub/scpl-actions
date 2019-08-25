@@ -294,7 +294,14 @@ export function ShortcutsDictionaryParameter({
 }) {
 	let [fakeItems, setFakeItems] = useState(items);
 	let [dragging, setDragging] = useState<
-		{ uid: string; position: number } | undefined
+		| {
+				uid: string;
+				position: number;
+				startIndex: number;
+				index: number;
+				dragging: boolean;
+		  }
+		| undefined
 	>(undefined);
 	let topElem = useRef<HTMLDivElement>(null);
 	return (
@@ -303,14 +310,34 @@ export function ShortcutsDictionaryParameter({
 			{fakeItems.map((item, i) => {
 				let isDragging = dragging && dragging.uid === item.uid;
 				return [
+					/*
+					a
+					  (2)
+					b 
+					c (3) so c, b needs to go up
+					*/
 					<Parameter
 						name={"unnamed dictionary"}
 						key={item.uid}
-						className={"dictionary " + (isDragging ? "dragging" : "")}
+						className={
+							"dictionary " +
+							(isDragging && dragging!.dragging ? "dragging" : "")
+						}
 						style={
 							isDragging
 								? {
 										transform: "translate(0, " + dragging!.position + "px)"
+								  }
+								: dragging
+								? {
+										transform:
+											"translate(0, " +
+											(i >= dragging.startIndex && i <= dragging.index
+												? -88 * +cssdata.scale
+												: i <= dragging.startIndex && i >= dragging.index
+												? 88 * +cssdata.scale
+												: 0) +
+											"px)"
 								  }
 								: {}
 						}
@@ -329,16 +356,24 @@ export function ShortcutsDictionaryParameter({
 						</div>
 						<div
 							className="reorder"
+							touch-action="none"
 							onPointerDown={async e => {
-								setDragging({
-									uid: item.uid,
-									position: 0
-								});
+								setDragging(
+									(dragging = {
+										uid: item.uid,
+										position: 0,
+										startIndex: i,
+										index: i,
+										dragging: true
+									})
+								);
 								let lastPos = e.clientY;
 								let lastOffset = 0;
 								e.preventDefault();
 								e.stopPropagation();
 								await startDragWatcher(e.nativeEvent, e => {
+									e.preventDefault();
+									e.stopPropagation();
 									let currentOffset = lastOffset + (e.clientY - lastPos);
 									let realPosition = i * 88 * +cssdata.scale;
 									let newRealPosition = realPosition + currentOffset;
@@ -349,32 +384,46 @@ export function ShortcutsDictionaryParameter({
 										Math.min(newExpectedIndex, items.length - 1),
 										0
 									);
-									if (newExpectedIndex !== i) {
-										let fakeItemsCopy = fakeItems.slice();
-										fakeItemsCopy.splice(
-											newExpectedIndex,
-											0,
-											...fakeItemsCopy.splice(i, 1)
-										);
-										console.log(
-											"new value",
-											fakeItemsCopy,
-											i,
-											newExpectedIndex
-										);
-										setFakeItems(fakeItemsCopy);
-										fakeItems = fakeItemsCopy;
-										currentOffset -=
-											(newExpectedIndex - i) * 88 * +cssdata.scale;
-										i = newExpectedIndex;
-									}
-									setDragging({
-										uid: item.uid,
-										position: currentOffset
-									});
+									setDragging(
+										(dragging = {
+											uid: item.uid,
+											position: currentOffset,
+											startIndex: dragging!.startIndex,
+											index: newExpectedIndex,
+											dragging: true
+										})
+									);
 									lastOffset = currentOffset;
 									lastPos = e.clientY;
 								});
+								let currentOffset = dragging!.position;
+								let newExpectedIndex = dragging!.index;
+								console.log(newExpectedIndex);
+								setDragging(
+									(dragging = {
+										uid: dragging!.uid,
+										position:
+											(newExpectedIndex - dragging!.startIndex) *
+											88 *
+											+cssdata.scale,
+										startIndex: dragging!.startIndex,
+										index: newExpectedIndex,
+										dragging: false
+									})
+								);
+								await new Promise(r => setTimeout(r, 100));
+								if (newExpectedIndex !== dragging!.startIndex) {
+									let fakeItemsCopy = fakeItems.slice();
+									fakeItemsCopy.splice(
+										newExpectedIndex,
+										0,
+										...fakeItemsCopy.splice(dragging!.startIndex, 1)
+									);
+									setFakeItems(fakeItemsCopy);
+									fakeItems = fakeItemsCopy;
+									currentOffset -= (newExpectedIndex - i) * 88 * +cssdata.scale;
+									i = newExpectedIndex;
+								}
 								setDragging(undefined);
 							}}
 						>

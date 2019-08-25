@@ -19,7 +19,6 @@ $scale: 0.5;
 	input {
 		position: absolute;
 		left: -9999px;
-		pointer-events: none;
 	}
 	label {
 		border: none;
@@ -89,11 +88,6 @@ $scale: 0.5;
 
 .cssdemo {
 	background-color: #efeff2;
-	position: fixed;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
 	padding: $scale * 50px;
 	font-family: sans-serif;
 	.icon {
@@ -180,13 +174,15 @@ $scale: 0.5;
 				margin-left: $scale * -24px;
 				padding-top: $scale * 15px;
 				grid-template-columns: $scale * 34px [remove] max-content $scale * 27px [key] max-content 4fr [line] 1px $scale * 20px [value] max-content 6fr [reorder] max-content $scale * 24px;
-				transition: 0.1s box-shadow;
+				transition: 0.1s box-shadow, 0.1s transform, 0.1s opacity;
+				background-color: white;
 				&.dragging {
-					background-color: white;
 					box-shadow: 0 0 $scale * 15px rgba(0, 0, 0, 1);
 					opacity: 0.8;
 					z-index: 1;
 					cursor: move;
+					transition: 0.1s box-shadow;
+					touch-action: manipulation;
 				}
 				.remove {
 					grid-column: remove;
@@ -222,7 +218,7 @@ $scale: 0.5;
 					font-size: $scale * 28px;
 					@include vertical-center;
 					cursor: move;
-					touch-action: none;
+					touch-action: manipulation;
 				}
 			}
 			&.addnewfield {
