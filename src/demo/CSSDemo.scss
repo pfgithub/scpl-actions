@@ -27,8 +27,8 @@ $scale: 0.5;
 		margin: $scale * 8px;
 		padding: 0;
 		border-radius: $scale * 15px;
-		transition: 0.1s text-shadow, 0.1s box-shadow, 0.1s background-color,
-			0.1s margin, 0.1s padding;
+		transition: 0.1s box-shadow, 0.1s background-color, 0.1s margin,
+			0.1s padding;
 		text-align: center;
 		vertical-align: middle;
 		cursor: pointer;
@@ -65,7 +65,8 @@ $scale: 0.5;
 	input:checked + label {
 		margin: $scale * 4px;
 		padding: $scale * 4px;
-		text-shadow: 0 0 1px black;
+		-webkit-text-stroke-width: 0.5px; // supported on everything but ie for some reason
+		-webkit-text-stroke-color: black;
 		background-color: white;
 		box-shadow: 0 $scale * 4px $scale * 4px rgba(0, 0, 0, 0.2);
 	}
@@ -176,6 +177,7 @@ $scale: 0.5;
 				grid-template-columns: $scale * 34px [remove] max-content $scale * 27px [key] max-content 4fr [line] 1px $scale * 20px [value] max-content 6fr [reorder] max-content $scale * 24px;
 				transition: 0.1s box-shadow, 0.1s transform, 0.1s opacity;
 				background-color: white;
+				max-height: $scale * 88px;
 				&.dragging {
 					box-shadow: 0 0 $scale * 15px rgba(0, 0, 0, 1);
 					opacity: 0.8;
