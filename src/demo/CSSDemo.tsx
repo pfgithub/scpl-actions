@@ -15,7 +15,10 @@ type IconString =
 	| "text"
 	| "remove"
 	| "reorder"
-	| "add";
+	| "add"
+	| "expandopen"
+	| "expandclosed"
+	| "delete";
 
 export default function CSSDemo(props: {}): JSX.Element {
 	return (
@@ -303,30 +306,41 @@ export function ShortcutsDictionaryParameter({
 		  }
 		| undefined
 	>(undefined);
+	let [removing, setRemoving] = useState<{ uid: string } | undefined>(
+		undefined
+	);
 	let topElem = useRef<HTMLDivElement>(null);
 	return (
 		<div className="dictionaryparameter">
 			<div ref={topElem} />
 			{fakeItems.map((item, i) => {
 				let isDragging = dragging && dragging.uid === item.uid;
+				let isRemoving = removing && removing.uid === item.uid;
 				return [
-					/*
-					a
-					  (2)
-					b 
-					c (3) so c, b needs to go up
-					*/
 					<Parameter
 						name={"unnamed dictionary"}
 						key={item.uid}
 						className={
 							"dictionary " +
-							(isDragging && dragging!.dragging ? "dragging" : "")
+							(isDragging && dragging!.dragging ? "dragging " : " ") +
+							(isRemoving ? "removing " : " ")
 						}
 						style={
 							isDragging
 								? {
-										transform: "translate(0, " + dragging!.position + "px)"
+										transform:
+											"translate(0, " +
+											Math.min(
+												Math.max(
+													dragging!.position,
+													-44 * +cssdata.scale -
+														dragging!.startIndex * 88 * +cssdata.scale
+												),
+												fakeItems.length * 88 * +cssdata.scale +
+													44 * +cssdata.scale -
+													dragging!.startIndex * 88 * +cssdata.scale
+											) +
+											"px)"
 								  }
 								: dragging
 								? {
@@ -344,7 +358,10 @@ export function ShortcutsDictionaryParameter({
 					>
 						<div className="remove">
 							<div>
-								<Icon icon="remove" />
+								<IconButton
+									icon="remove"
+									onClick={e => setRemoving({ uid: item.uid })}
+								/>
 							</div>
 						</div>
 						<div className="key">
@@ -431,18 +448,31 @@ export function ShortcutsDictionaryParameter({
 								<Icon icon="reorder" />
 							</div>
 						</div>
+						{removing ? (
+							<div
+								className="clickawayhandler"
+								onClick={() => setRemoving(undefined)}
+							></div>
+						) : null}
+						<button className="deletebtn">Delete</button>
 					</Parameter>
 				];
 			})}
 			<Parameter name={"add new field"} className={"addnewfield"}>
 				<div className="add">
 					<div>
-						<Icon icon="add" />
+						<IconButton icon="add" />
 					</div>
 				</div>
 				<div className="description">
 					<div>Add new field</div>
 				</div>
+				{removing ? (
+					<div
+						className="clickawayhandler"
+						onClick={() => setRemoving(undefined)}
+					></div>
+				) : null}
 			</Parameter>
 		</div>
 	);
@@ -457,10 +487,7 @@ export function ExpansionParameter({
 }) {
 	return (
 		<LabeledParameter label={label}>
-			<div
-				className={"icon " + (open ? "expandopen" : "expandclosed")}
-				aria-label={"expand " + (open ? "open" : "closed")}
-			></div>
+			<Icon icon={open ? "expandopen" : "expandclosed"} />
 		</LabeledParameter>
 	);
 }
@@ -490,9 +517,11 @@ export function SegmentedButton({
 }) {
 	let [idPrefix] = useState("" + Math.random());
 	let [realSelected, setRealSelected] = useState(selected);
+	let ref = useRef<HTMLDivElement>(null);
+	let width = ref && ref.current ? ref.current.clientWidth : 10000;
 	return (
 		<form>
-			<div className="segmentedbutton">
+			<div ref={ref} className="segmentedbutton">
 				{values.map((value, i) => (
 					<React.Fragment key={value}>
 						<input
@@ -535,10 +564,7 @@ export function ActionFullWidthShowMoreParameter({ open }: { open: boolean }) {
 			className="showmore"
 			label={open ? "Show Less" : "Show More"}
 		>
-			<div
-				className={"icon " + (open ? "expandopen" : "expandclosed")}
-				aria-label={"expand " + (open ? "open" : "closed")}
-			></div>
+			<Icon icon={open ? "expandopen" : "expandclosed"} />
 		</LabeledParameter>
 	);
 }
@@ -578,11 +604,26 @@ export function ActionTitle({
 			<div className="titletext">
 				<div>{name}</div>
 			</div>
-			<button className="icon delete" aria-label={"delete action"}></button>
+			<IconButton icon="delete" />
 		</h3>
 	);
 }
 
 export function Icon({ icon }: { icon: IconString }) {
 	return <div className={"icon " + icon} aria-label={icon + " icon"}></div>;
+}
+
+export function IconButton(
+	props: { icon: IconString } & React.DetailedHTMLProps<
+		React.ButtonHTMLAttributes<HTMLButtonElement>,
+		HTMLButtonElement
+	>
+) {
+	return (
+		<button
+			className={"icon " + props.icon}
+			aria-label={props.icon + ""}
+			{...props}
+		></button>
+	);
 }

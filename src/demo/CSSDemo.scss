@@ -140,8 +140,19 @@ $scale: 0.5;
 		word-wrap: break-word;
 		.dictionaryparameter {
 			position: relative;
+			overflow-y: hidden;
+			overflow-x: hidden;
+			margin-left: -24px * $scale;
+			margin-right: -24px * $scale;
 			.dropplaceholder {
 				height: $scale * 88px;
+			}
+			.clickawayhandler {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
 			}
 		}
 		.parameter {
@@ -171,13 +182,18 @@ $scale: 0.5;
 				background-color: #dbdbdb;
 			}
 			&.dictionary {
-				margin-right: $scale * -24px;
-				margin-left: $scale * -24px;
+				margin-left: 0;
 				padding-top: $scale * 15px;
 				grid-template-columns: $scale * 34px [remove] max-content $scale * 27px [key] max-content 4fr [line] 1px $scale * 20px [value] max-content 6fr [reorder] max-content $scale * 24px;
 				transition: 0.1s box-shadow, 0.1s transform, 0.1s opacity;
 				background-color: white;
 				max-height: $scale * 88px;
+				&:not(.dragging)::before {
+					left: 32px * $scale;
+				}
+				&:not(.dragging)::after {
+					left: 32px * $scale;
+				}
 				&.dragging {
 					box-shadow: 0 0 $scale * 15px rgba(0, 0, 0, 1);
 					opacity: 0.8;
@@ -185,6 +201,20 @@ $scale: 0.5;
 					cursor: move;
 					transition: 0.1s box-shadow;
 					touch-action: manipulation;
+				}
+				&.removing {
+					transform: translate(-200px * $scale, 0);
+				}
+				.deletebtn {
+					position: absolute;
+					right: -200px * $scale;
+					max-width: 200px * $scale;
+					width: 200px * $scale;
+					top: 0;
+					bottom: 0;
+					border: none;
+					background-color: #fe3c30;
+					color: white;
 				}
 				.remove {
 					grid-column: remove;
@@ -224,8 +254,13 @@ $scale: 0.5;
 				}
 			}
 			&.addnewfield {
-				margin-right: $scale * -24px;
-				grid-template-columns: [add] max-content $scale * 27px [description] max-content 1fr $scale * 24px;
+				grid-template-columns: $scale * 24px [add] max-content $scale * 27px [description] max-content 1fr $scale * 24px;
+				&:not(.dragging)::before {
+					left: 32px * $scale;
+				}
+				&:not(.dragging)::after {
+					left: 32px * $scale;
+				}
 				.add {
 					grid-column: add;
 					grid-row: center;
