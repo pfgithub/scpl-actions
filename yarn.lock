@@ -9372,10 +9372,8 @@ schema-utils@^2.0.0, schema-utils@^2.0.1:
     ajv "^6.1.0"
     ajv-keywords "^3.1.0"
 
-scpl@^1.13.10:
-  version "1.13.10"
-  resolved "https://registry.yarnpkg.com/scpl/-/scpl-1.13.10.tgz#72d618af0140541c232715923b4c884ac2b45e19"
-  integrity sha512-oJPg32zhAXLrs0v54c2D81tV/bFnqmQpZkuH9z+PfyoCC4bNMZ7RRUJl/h3AwMevfzM4k81GnuZx3xy1MmCGbg==
+scpl@../scpl:
+  version "1.14.0"
   dependencies:
     bplist-creator "^0.0.7"
     bplist-parser "^0.1.1"

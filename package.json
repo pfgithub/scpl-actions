@@ -14,7 +14,7 @@
 		"react-markdown": "^4.1.0",
 		"react-router-dom": "^5.0.1",
 		"react-scripts": "3.1.1",
-		"scpl": "^1.13.10",
+		"scpl": "../scpl",
 		"typescript": "3.5.3"
 	},
 	"scripts": {

@@ -1,285 +1,226 @@
-import React, { ReactNode, useRef } from "react";
+import React, {
+	ReactNode,
+	useRef,
+	useEffect,
+	useMemo,
+	useCallback
+} from "react";
+import { allActions, getActionFromName } from "scpl";
+import { getActionFromID } from "scpl/built/src/ActionData";
+import {
+	WFAction,
+	WFParameter,
+	WFParameters,
+	WFTextParameter
+} from "scpl/built/src/OutputData";
+import {
+	ShortcutsParameterSpec,
+	ShortcutsEnumerationParameterSpec
+} from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 
 //@ts-ignore
 import * as cssexported from "./CSSDemo.scss";
 import { useState } from "react";
 import { startDragWatcher } from "./util";
 
-let cssdata: { scale: string } = cssexported;
+import { Icon, IconButton, IconString } from "./Icon";
 
-type IconString =
-	| "download"
-	| "calculator"
-	| "wifi"
-	| "scripting"
-	| "text"
-	| "remove"
-	| "reorder"
-	| "add"
-	| "expandopen"
-	| "expandclosed"
-	| "delete";
+import { Parameter } from "./parameters/Parameter";
+import { ShortcutsDictionaryParameter } from "./parameters/ShortcutsDictionaryParameter";
+
+export let cssdata: { scale: string } = cssexported;
+
+export type ParameterSummaryItem =
+	| string
+	| { details: ShortcutsParameterSpec; value: WFParameter };
 
 export default function CSSDemo(props: {}): JSX.Element {
 	return (
 		<div className="cssdemo">
-			<Action icon="download" name="Network" />
+			<Action identifier="is.workflow.actions.downloadurl" />
 		</div>
 	);
 }
 
-/*
-"is.workflow.actions.downloadurl": {
-		"ActionClass": "WFDownloadURLAction",
-		"ActionKeywords": [
-			"URL",
-			"web",
-			"display",
-			"site",
-			"open",
-			"show",
-			"post",
-			"put",
-			"api",
-			"curl",
-			"wget",
-			"http",
-			"headers",
-			"request",
-			"form"
-		],
-		"Attribution": "Network",
-		"Category": "Web",
-		"Description": {
-			"DescriptionNote": "To make a multipart HTTP request, choose \"Form\" as the request body type and add files as field values.",
-			"DescriptionResult": "The fetched data",
-			"DescriptionSummary": "Gets the contents of URLs passed into the action. Useful for downloading files and web content, or for making API requests."
-		},
-		"IconName": "Downloads.png",
-		"Input": {
-			"Multiple": true,
-			"ParameterKey": "WFURL",
-			"Required": true,
-			"Types": ["WFURLContentItem"]
-		},
-		"InputPassthrough": false,
-		"LastModifiedDate": "2016-11-11T06:00:00.000Z",
-		"Name": "Get Contents of URL",
-		"Output": {
-			"Multiple": true,
-			"OutputName": "Contents of URL",
-			"Types": ["public.data"]
-		},
-		"ParameterSummary": "Get contents of ${WFURL}",
-		"Parameters": [
-			{
-				"AllowsMultipleValues": false,
-				"AutocapitalizationType": "None",
-				"Class": "WFTextInputParameter",
-				"DisableAutocorrection": true,
-				"Key": "WFURL",
-				"KeyboardType": "URL",
-				"Label": "URL",
-				"Placeholder": "URL",
-				"TextContentType": "URL"
-			},
-			{
-				"Class": "WFEnumerationParameter",
-				"DefaultValue": "GET",
-				"Description": "The HTTP method to use.",
-				"DoNotLocalizeValues": true,
-				"Items": ["GET", "POST", "PUT", "PATCH", "DELETE"],
-				"Key": "WFHTTPMethod",
-				"Label": "Method"
-			},
-			{
-				"Class": "WFExpandingParameter",
-				"Key": "ShowHeaders",
-				"Label": "Headers"
-			},
-			{
-				"Class": "WFDictionaryParameter",
-				"ItemTypeName": "header",
-				"Key": "WFHTTPHeaders",
-				"Label": "Headers",
-				"RequiredResources": [
-					{
-						"WFParameterKey": "ShowHeaders",
-						"WFParameterValue": true,
-						"WFResourceClass": "WFParameterRelationResource"
-					}
-				]
-			},
-			{
-				"Class": "WFEnumerationParameter",
-				"DefaultValue": "JSON",
-				"DisallowedVariableTypes": ["Ask", "Variable"],
-				"Items": ["JSON", "Form", "File"],
-				"Key": "WFHTTPBodyType",
-				"Label": "Request Body",
-				"RequiredResources": [
-					{
-						"WFParameterKey": "WFHTTPMethod",
-						"WFParameterRelation": "!=",
-						"WFParameterValues": ["GET"],
-						"WFResourceClass": "WFParameterRelationResource"
-					}
-				]
-			},
-			{
-				"AllowedValueTypes": [0, 5],
-				"Class": "WFDictionaryParameter",
-				"ItemTypeName": "field",
-				"Key": "WFFormValues",
-				"Label": "Form Values",
-				"RequiredResources": [
-					{
-						"WFParameterKey": "WFHTTPBodyType",
-						"WFParameterValue": "Form",
-						"WFResourceClass": "WFParameterRelationResource"
-					},
-					{
-						"WFParameterKey": "WFHTTPMethod",
-						"WFParameterRelation": "!=",
-						"WFParameterValues": ["GET"],
-						"WFResourceClass": "WFParameterRelationResource"
-					}
-				]
-			},
-			{
-				"AllowedValueTypes": [0, 1, 2, 3, 4],
-				"Class": "WFDictionaryParameter",
-				"ItemTypeName": "field",
-				"Key": "WFJSONValues",
-				"Label": "JSON Values",
-				"RequiredResources": [
-					{
-						"WFParameterKey": "WFHTTPBodyType",
-						"WFParameterValue": "JSON",
-						"WFResourceClass": "WFParameterRelationResource"
-					},
-					{
-						"WFParameterKey": "WFHTTPMethod",
-						"WFParameterRelation": "!=",
-						"WFParameterValues": ["GET"],
-						"WFResourceClass": "WFParameterRelationResource"
-					}
-				]
-			},
-			{
-				"Class": "WFVariablePickerParameter",
-				"Key": "WFRequestVariable",
-				"Label": "File",
-				"RequiredResources": [
-					{
-						"WFParameterKey": "WFHTTPBodyType",
-						"WFParameterValue": "File",
-						"WFResourceClass": "WFParameterRelationResource"
-					},
-					{
-						"WFParameterKey": "WFHTTPMethod",
-						"WFParameterRelation": "!=",
-						"WFParameterValues": ["GET"],
-						"WFResourceClass": "WFParameterRelationResource"
-					}
-				]
-			}
-		],
-		"RequiredResources": ["WFRemoteServerAccessResource"],
-		"ResidentCompatible": true,
-		"ShortName": "Download URL",
-		"Subcategory": "URLs"
-	},
-*/
+export type UpdateParametersCallback = (
+	key: string,
+	newParameter: WFParameter
+) => void;
 
-export function Action({
-	icon,
-	name
-}: {
-	icon: IconString;
-	name: string;
-}): JSX.Element {
+export function Action({ identifier }: { identifier: string }): JSX.Element {
+	let [actionOutput, setActionOutput] = useState<WFAction>({
+		WFWorkflowActionIdentifier: identifier,
+		WFWorkflowActionParameters: {}
+	});
+	let [showMore, setShowMore] = useState(false); // this is not saved for some reason
+	let actionDetails = getActionFromID(identifier)!._data;
+	let parameterSummary = useMemo<ParameterSummaryItem[]>(
+		() =>
+			(actionDetails.ParameterSummary as string)
+				.split(/\$\{(.+?)\}/)
+				.map((el, i) =>
+					i % 2 === 1
+						? {
+								details: actionDetails.Parameters!.find(p => p.Key === el)!,
+								value: actionOutput.WFWorkflowActionParameters![el]
+						  }
+						: el
+				),
+		[
+			actionDetails.ParameterSummary,
+			actionDetails.Parameters,
+			actionOutput.WFWorkflowActionParameters
+		]
+	);
+	let updateParameter = useCallback<UpdateParametersCallback>(
+		(key, newParameter) =>
+			setActionOutput({
+				...actionOutput,
+				WFWorkflowActionParameters: {
+					...actionOutput.WFWorkflowActionParameters,
+					[key]: newParameter
+				}
+			}),
+		[actionOutput]
+	);
+	console.log(actionOutput);
 	return (
-		<div className="action">
-			<ActionTitle icon={icon} name={name} />
-			<ActionParameterSummary
-				text={[
-					"Get contents of ",
-					{ type: "input", value: "https://google.com" }
-				]}
-			/>
-			<ActionFullWidthShowMoreParameter open={true} />
-			<EnumParameter
-				label="Method"
-				values={["GET", "POST", "PUT", "PATCH", "DELETE"]}
-				selected="POST"
-			/>
-			<ExpansionParameter label={"Headers"} open={false} />
-			<EnumParameter
+		<>
+			<div className="action">
+				<ActionTitle icon={"download"} name={actionDetails.Attribution!} />
+				<ActionParameterSummary
+					items={parameterSummary}
+					parameters={actionOutput.WFWorkflowActionParameters!}
+					updateParameter={updateParameter}
+				/>
+				<ActionFullWidthShowMoreParameter
+					open={showMore}
+					setOpen={v => setShowMore(v)}
+				/>
+				{showMore ? (
+					<>
+						{actionDetails.Parameters!.map(param => {
+							if (param.Class === "WFEnumerationParameter") {
+								return (
+									<EnumParameter
+										paramKey={param.Key}
+										data={param}
+										parameters={actionOutput.WFWorkflowActionParameters!}
+										updateParameter={updateParameter}
+									/>
+								);
+							} else {
+								return null;
+							}
+						})}
+						{/*<EnumParameter
+				key={"WFHTTPMethod"}
+				data={
+					actionDetails.Parameters![1] as ShortcutsEnumerationParameterSpec
+				}
+				parameters={actionOutput.WFWorkflowActionParameters!}
+				updateParameter={updateParameter}
+			/>*/}
+						<ExpansionParameter label={"Headers"} open={false} />
+						{/*<EnumParameter
 				label="Request Body"
 				values={["JSON", "Form", "File"]}
 				selected="JSON"
-			/>
-			<ShortcutsDictionaryParameter
-				items={[
-					{ key: "key", value: "value", type: "string", uid: "0" },
-					{ key: "other key", value: "other value", type: "string", uid: "1" },
-					{ key: "third key", value: "third value", type: "string", uid: "2" }
-				]}
-			/>
-		</div>
+			/>*/}
+						<ShortcutsDictionaryParameter
+							items={[
+								{ key: "key", value: "value", type: "string", uid: "0" },
+								{
+									key: "other key",
+									value: "other value",
+									type: "string",
+									uid: "1"
+								},
+								{
+									key: "third key",
+									value: "third value",
+									type: "string",
+									uid: "2"
+								}
+							]}
+						/>
+					</>
+				) : null}
+			</div>
+			<div className="connector space" />
+			<div className="action">
+				<pre>
+					<code>{JSON.stringify(actionOutput, null, "\t")}</code>
+				</pre>
+			</div>
+		</>
 	);
 }
 
-type DictionaryParameterValueType =
-	| { key: string; type: "string"; value: string; uid: string }
-	| { key: string; type: "number"; value: string; uid: string }
-	| {
-			key: string;
-			type: "array";
-			value: DictionaryParameterValueType[];
-			uid: string;
-	  }
-	| {
-			key: string;
-			type: "dictionary";
-			value: DictionaryParameterValueType[];
-			uid: string;
-	  }
-	| { key: string; type: "boolean"; value: string; uid: string };
-
-export function Parameter({
-	className,
-	children,
-	name,
-	...more
-}: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-	className?: string;
-	children: ReactNode;
-	name: string;
+export function SummaryTextInput({
+	value,
+	onChange
+}: {
+	value: string;
+	onChange: (v: string) => void;
 }) {
+	// let ref = useRef<HTMLDivElement>(null);
+	// useEffect(() => {
+	// 	ref.current!.textContent = value
+	// 	//eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, []);
+	//
+	// return (
+	// 	<div
+	// 		className="input"
+	// 		contentEditable={true}
+	// 		ref={ref}
+	// 		onInput={e => {
+	// 			onChange(e.currentTarget.textContent || "");
+	// 		}}
+	// 	></div>
+	// );
+	// return (
+	// 	<AutosizeInput
+	// 		className="input"
+	// 		value={value}
+	// 		onChange={e => onChange(e.currentTarget.value)}
+	// 	/>
+	// );
+
+	let [editing, setEditing] = useState(false);
+
+	if (!editing) {
+		return (
+			<span className="input" onClick={e => setEditing(true)}>
+				{value}
+			</span> // !!!!accessability
+		);
+	}
 	return (
-		<section
-			className={"parameter " + (className || "")}
-			aria-label={name + ", parameter"}
-			{...more}
-		>
-			{children}
-		</section>
+		<input
+			className="input"
+			value={value}
+			autoFocus
+			onChange={e => onChange(e.currentTarget.value)}
+			onBlur={e => setEditing(false)} // !!!!bad
+		/>
 	);
 }
 
 export function LabeledParameter({
 	label,
 	children,
-	className
+	className,
+	onClick
 }: {
 	className?: string;
 	label: string;
 	children: ReactNode;
+	onClick?: () => void;
 }) {
 	return (
-		<Parameter className={className} name={label}>
+		<Parameter className={className} name={label} onClick={onClick}>
 			<div className="label">
 				<div>{label}</div>
 			</div>
@@ -287,194 +228,6 @@ export function LabeledParameter({
 				<div>{children}</div>
 			</div>
 		</Parameter>
-	);
-}
-
-export function ShortcutsDictionaryParameter({
-	items
-}: {
-	items: DictionaryParameterValueType[];
-}) {
-	let [fakeItems, setFakeItems] = useState(items);
-	let [dragging, setDragging] = useState<
-		| {
-				uid: string;
-				position: number;
-				startIndex: number;
-				index: number;
-				dragging: boolean;
-		  }
-		| undefined
-	>(undefined);
-	let [removing, setRemoving] = useState<{ uid: string } | undefined>(
-		undefined
-	);
-	let topElem = useRef<HTMLDivElement>(null);
-	return (
-		<div className="dictionaryparameter">
-			<div ref={topElem} />
-			{fakeItems.map((item, i) => {
-				let isDragging = dragging && dragging.uid === item.uid;
-				let isRemoving = removing && removing.uid === item.uid;
-				return [
-					<Parameter
-						name={"unnamed dictionary"}
-						key={item.uid}
-						className={
-							"dictionary " +
-							(isDragging && dragging!.dragging ? "dragging " : " ") +
-							(isRemoving ? "removing " : " ")
-						}
-						style={
-							isDragging
-								? {
-										transform:
-											"translate(0, " +
-											Math.min(
-												Math.max(
-													dragging!.position,
-													-44 * +cssdata.scale -
-														dragging!.startIndex * 88 * +cssdata.scale
-												),
-												fakeItems.length * 88 * +cssdata.scale +
-													44 * +cssdata.scale -
-													dragging!.startIndex * 88 * +cssdata.scale
-											) +
-											"px)"
-								  }
-								: dragging
-								? {
-										transform:
-											"translate(0, " +
-											(i >= dragging.startIndex && i <= dragging.index
-												? -88 * +cssdata.scale
-												: i <= dragging.startIndex && i >= dragging.index
-												? 88 * +cssdata.scale
-												: 0) +
-											"px)"
-								  }
-								: {}
-						}
-					>
-						<div className="remove">
-							<div>
-								<IconButton
-									icon="remove"
-									onClick={e => setRemoving({ uid: item.uid })}
-								/>
-							</div>
-						</div>
-						<div className="key">
-							<div>{item.key}</div>
-						</div>
-						<div className="line"></div>
-						<div className="value">
-							<div>{item.value}</div>
-						</div>
-						<div
-							className="reorder"
-							touch-action="none"
-							onPointerDown={async e => {
-								setDragging(
-									(dragging = {
-										uid: item.uid,
-										position: 0,
-										startIndex: i,
-										index: i,
-										dragging: true
-									})
-								);
-								let lastPos = e.clientY;
-								let lastOffset = 0;
-								e.preventDefault();
-								e.stopPropagation();
-								await startDragWatcher(e.nativeEvent, e => {
-									e.preventDefault();
-									e.stopPropagation();
-									let currentOffset = lastOffset + (e.clientY - lastPos);
-									let realPosition = i * 88 * +cssdata.scale;
-									let newRealPosition = realPosition + currentOffset;
-									let newExpectedIndex = Math.round(
-										newRealPosition / (88 * +cssdata.scale)
-									);
-									newExpectedIndex = Math.max(
-										Math.min(newExpectedIndex, items.length - 1),
-										0
-									);
-									setDragging(
-										(dragging = {
-											uid: item.uid,
-											position: currentOffset,
-											startIndex: dragging!.startIndex,
-											index: newExpectedIndex,
-											dragging: true
-										})
-									);
-									lastOffset = currentOffset;
-									lastPos = e.clientY;
-								});
-								let currentOffset = dragging!.position;
-								let newExpectedIndex = dragging!.index;
-								console.log(newExpectedIndex);
-								setDragging(
-									(dragging = {
-										uid: dragging!.uid,
-										position:
-											(newExpectedIndex - dragging!.startIndex) *
-											88 *
-											+cssdata.scale,
-										startIndex: dragging!.startIndex,
-										index: newExpectedIndex,
-										dragging: false
-									})
-								);
-								await new Promise(r => setTimeout(r, 100));
-								if (newExpectedIndex !== dragging!.startIndex) {
-									let fakeItemsCopy = fakeItems.slice();
-									fakeItemsCopy.splice(
-										newExpectedIndex,
-										0,
-										...fakeItemsCopy.splice(dragging!.startIndex, 1)
-									);
-									setFakeItems(fakeItemsCopy);
-									fakeItems = fakeItemsCopy;
-									currentOffset -= (newExpectedIndex - i) * 88 * +cssdata.scale;
-									i = newExpectedIndex;
-								}
-								setDragging(undefined);
-							}}
-						>
-							<div>
-								<Icon icon="reorder" />
-							</div>
-						</div>
-						{removing ? (
-							<div
-								className="clickawayhandler"
-								onClick={() => setRemoving(undefined)}
-							></div>
-						) : null}
-						<button className="deletebtn">Delete</button>
-					</Parameter>
-				];
-			})}
-			<Parameter name={"add new field"} className={"addnewfield"}>
-				<div className="add">
-					<div>
-						<IconButton icon="add" />
-					</div>
-				</div>
-				<div className="description">
-					<div>Add new field</div>
-				</div>
-				{removing ? (
-					<div
-						className="clickawayhandler"
-						onClick={() => setRemoving(undefined)}
-					></div>
-				) : null}
-			</Parameter>
-		</div>
 	);
 }
 
@@ -492,31 +245,47 @@ export function ExpansionParameter({
 	);
 }
 
+type _pc<N extends string> = {
+	Class: N;
+};
+
 export function EnumParameter({
-	label,
-	values,
-	selected
+	paramKey,
+	data,
+	parameters,
+	updateParameter
 }: {
-	label: string;
-	values: string[];
-	selected: string;
+	paramKey: string;
+	data: ShortcutsEnumerationParameterSpec & _pc<"WFEnumerationParameter">;
+	parameters: WFParameters;
+	updateParameter: UpdateParametersCallback;
 }) {
 	return (
-		<LabeledParameter label={label}>
-			<SegmentedButton values={values} selected={selected} />
+		<LabeledParameter label={data.Label || "???"}>
+			<SegmentedButton
+				values={data.Items}
+				selected={
+					(parameters[paramKey] as string) ||
+					// !!!!!!!!!!!might be variable
+					data.DefaultValue ||
+					"this should never happen"
+				}
+				onChange={ns => updateParameter(paramKey, ns)}
+			/>
 		</LabeledParameter>
 	);
 }
 
 export function SegmentedButton({
 	values,
-	selected
+	selected,
+	onChange
 }: {
 	values: string[];
 	selected: string;
+	onChange: (newSelected: string) => void;
 }) {
 	let [idPrefix] = useState("" + Math.random());
-	let [realSelected, setRealSelected] = useState(selected);
 	let ref = useRef<HTMLDivElement>(null);
 	let width = ref && ref.current ? ref.current.clientWidth : 10000;
 	return (
@@ -526,8 +295,8 @@ export function SegmentedButton({
 					<React.Fragment key={value}>
 						<input
 							type="radio"
-							checked={value === realSelected}
-							onChange={e => e.currentTarget.checked && setRealSelected(value)}
+							checked={value === selected}
+							onChange={e => e.currentTarget.checked && onChange(value)}
 							id={value + "-" + idPrefix}
 							name="selection"
 						></input>
@@ -536,15 +305,15 @@ export function SegmentedButton({
 							className={`${
 								true &&
 								i !== values.length - 1 &&
-								value !== realSelected &&
-								values[i + 1] !== realSelected
+								value !== selected &&
+								values[i + 1] !== selected
 									? "rightline"
 									: ""
 							} ${
 								true &&
 								i !== 0 &&
-								value !== realSelected &&
-								values[i - 1] !== realSelected
+								value !== selected &&
+								values[i - 1] !== selected
 									? "leftline"
 									: ""
 							}`}
@@ -558,33 +327,68 @@ export function SegmentedButton({
 	);
 }
 
-export function ActionFullWidthShowMoreParameter({ open }: { open: boolean }) {
+export function ActionFullWidthShowMoreParameter({
+	open,
+	setOpen
+}: {
+	open: boolean;
+	setOpen: (nv: boolean) => void;
+}) {
 	return (
 		<LabeledParameter
 			className="showmore"
 			label={open ? "Show Less" : "Show More"}
+			onClick={() => setOpen(!open)}
 		>
 			<Icon icon={open ? "expandopen" : "expandclosed"} />
 		</LabeledParameter>
 	);
 }
 
-export function ActionParameterSummary({
-	text
+export function ParameterSummaryItem({
+	item,
+	parameters,
+	updateParameter
 }: {
-	text: (string | { type: "input"; value: string })[];
+	item: ParameterSummaryItem;
+	parameters: WFParameters;
+	updateParameter: UpdateParametersCallback;
+}) {
+	if (typeof item === "string") {
+		return <React.Fragment>{item}</React.Fragment>;
+	}
+	if (item.details.Class === "WFTextInputParameter") {
+		let parameterValue = parameters[item.details.Key] as WFTextParameter;
+		return (
+			<SummaryTextInput
+				value={(item.value || "") as string}
+				onChange={v => updateParameter(item.details.Key, v)}
+			/>
+		);
+	}
+	return <div className="error">Unsupported class {item.details.Class}</div>;
+}
+
+export function ActionParameterSummary({
+	items,
+	parameters,
+	updateParameter
+}: {
+	items: ParameterSummaryItem[];
+	parameters: WFParameters;
+	updateParameter: UpdateParametersCallback;
 }) {
 	return (
 		<div className="parametersummary">
-			{text.map((v, i) => {
+			{items.map((v, i) => {
 				// i should be good enough to use as a key
-				if (typeof v === "string") {
-					return <React.Fragment key={i}>{v}</React.Fragment>;
-				}
 				return (
-					<div className="input" key={i} contentEditable={true}>
-						{v.value}
-					</div>
+					<ParameterSummaryItem
+						key={i}
+						item={v}
+						parameters={parameters}
+						updateParameter={updateParameter}
+					/>
 				);
 			})}
 		</div>
@@ -606,24 +410,5 @@ export function ActionTitle({
 			</div>
 			<IconButton icon="delete" />
 		</h3>
-	);
-}
-
-export function Icon({ icon }: { icon: IconString }) {
-	return <div className={"icon " + icon} aria-label={icon + " icon"}></div>;
-}
-
-export function IconButton(
-	props: { icon: IconString } & React.DetailedHTMLProps<
-		React.ButtonHTMLAttributes<HTMLButtonElement>,
-		HTMLButtonElement
-	>
-) {
-	return (
-		<button
-			className={"icon " + props.icon}
-			aria-label={props.icon + ""}
-			{...props}
-		></button>
 	);
 }

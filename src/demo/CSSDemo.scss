@@ -131,9 +131,13 @@ $scale: 0.5;
 		cursor: pointer;
 		border: none;
 	}
+	.connector {
+		margin-top: $scale * 50px; // !!!!! EXACT VALUE NOT KNOWN
+	}
 	.action {
 		background-color: white;
 		padding: $scale * 24px;
+		padding-bottom: 0;
 		border-radius: $scale * 28px;
 		box-shadow: 0 0 $scale * 20px rgba(0, 0, 0, 0.1);
 		overflow-x: hidden;
@@ -215,6 +219,10 @@ $scale: 0.5;
 					border: none;
 					background-color: #fe3c30;
 					color: white;
+					display: none;
+				}
+				.deletebtn.deleting {
+					display: block;
 				}
 				.remove {
 					grid-column: remove;
@@ -323,12 +331,14 @@ $scale: 0.5;
 			.input {
 				background-color: #e5f0fe;
 				border-radius: $scale * 9999px;
+				border: none;
 				display: inline;
 				color: #007aff;
 				font-weight: medium;
 				padding-left: $scale * 14px;
 				padding-right: $scale * 14px;
 				line-height: $scale * 53px;
+				font: inherit;
 			}
 		}
 	}
