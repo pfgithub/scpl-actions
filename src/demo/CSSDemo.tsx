@@ -24,7 +24,6 @@ import { ShortcutsParameterRelationResourceRelationSpec } from "scpl/built/src/D
 //@ts-ignore
 import * as cssexported from "./CSSDemo.scss";
 import { useState } from "react";
-import { startDragWatcher } from "./util";
 
 import { Icon, IconButton, IconString } from "./Icon";
 
@@ -38,9 +37,22 @@ export type ParameterSummaryItem =
 	| { details: ShortcutsParameterSpec; value: WFParameter };
 
 export default function CSSDemo(props: {}): JSX.Element {
+	let [actionOutput, setActionOutput] = useState<WFAction>({
+		WFWorkflowActionIdentifier: "is.workflow.actions.downloadurl",
+		WFWorkflowActionParameters: {}
+	});
+	let [key, setKey] = useState(0);
 	return (
 		<div className="cssdemo">
-			<Action identifier="is.workflow.actions.downloadurl" />
+			<button onClick={() => setKey(key + 1)}>Refresh</button>
+			<div className="connector space" />
+			{[
+				<Action
+					key={"" + key}
+					actionOutput={actionOutput}
+					setActionOutput={setActionOutput}
+				/>
+			]}
 		</div>
 	);
 }
@@ -103,11 +115,14 @@ function relationResourceCompare(
 	return false;
 }
 
-export function Action({ identifier }: { identifier: string }): JSX.Element {
-	let [actionOutput, setActionOutput] = useState<WFAction>({
-		WFWorkflowActionIdentifier: identifier,
-		WFWorkflowActionParameters: {}
-	});
+export function Action({
+	actionOutput,
+	setActionOutput
+}: {
+	actionOutput: WFAction;
+	setActionOutput: (val: WFAction) => void;
+}): JSX.Element {
+	let identifier = actionOutput.WFWorkflowActionIdentifier;
 	let [showMore, setShowMore] = useState(false); // this is not saved for some reason
 	let actionDetails = getActionFromID(identifier)!._data;
 	let parameterSummary = useMemo<ParameterSummaryItem[]>(
@@ -137,7 +152,7 @@ export function Action({ identifier }: { identifier: string }): JSX.Element {
 					[key]: newParameter
 				}
 			}),
-		[actionOutput]
+		[actionOutput, setActionOutput]
 	);
 	console.log(actionOutput);
 	return (
