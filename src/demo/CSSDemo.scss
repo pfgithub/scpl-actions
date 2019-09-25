@@ -100,6 +100,7 @@ $scale: 0.5;
 		background-position: center;
 		background-size: contain;
 		background-repeat: no-repeat;
+		transition: 0.1s transform ease-in-out;
 		&.download {
 			background-image: url(https://i.imgur.com/8zdJsL3.png);
 		}
@@ -141,6 +142,7 @@ $scale: 0.5;
 		border-radius: $scale * 28px;
 		box-shadow: 0 0 $scale * 20px rgba(0, 0, 0, 0.1);
 		overflow-x: hidden;
+		overflow-y: hidden;
 		word-wrap: break-word;
 		.dictionaryparameter {
 			position: relative;
@@ -167,6 +169,8 @@ $scale: 0.5;
 			padding-top: $scale * 16px;
 			padding-bottom: $scale * 15px;
 			position: relative;
+			transition: 0.1s opacity ease-in-out, 0.1s max-height ease-in-out,
+				0.1s padding ease-in-out;
 			&::before {
 				content: "";
 				position: absolute;
@@ -189,7 +193,8 @@ $scale: 0.5;
 				margin-left: 0;
 				padding-top: $scale * 15px;
 				grid-template-columns: $scale * 34px [remove] max-content $scale * 27px [key] max-content 4fr [line] 1px $scale * 20px [value] max-content 6fr [reorder] max-content $scale * 24px;
-				transition: 0.1s box-shadow, 0.1s transform, 0.1s opacity;
+				transition: 0.1s box-shadow, 0.1s transform, 0.1s opacity,
+					0.1s max-height ease-in-out, 0.1s padding ease-in-out;
 				background-color: white;
 				max-height: $scale * 88px;
 				&:not(.dragging)::before {
@@ -300,6 +305,24 @@ $scale: 0.5;
 				grid-row: center;
 				display: grid;
 				@include vertical-center;
+			}
+
+			&.revealing {
+				opacity: 0;
+				max-height: 0;
+			}
+			&.collapsing {
+				opacity: 0;
+				max-height: 0;
+				padding-top: 0 !important;
+				padding-bottom: 0 !important;
+			}
+			&.collapsed {
+				display: none;
+			}
+			&.visible {
+				opacity: 1;
+				max-height: $scale * 58px !important;
 			}
 		}
 		.title {
