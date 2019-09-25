@@ -19,7 +19,7 @@ export function Parameter({
 	children: ReactNode;
 	name: string;
 	visible: boolean;
-	initAnimation?: boolean;
+	initAnimation?: boolean; //
 }) {
 	let [ourViewState, setOurViewState] = useState<
 		"visible" | "revealing" | "collapsing" | "collapsed"
