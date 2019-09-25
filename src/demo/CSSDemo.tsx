@@ -17,7 +17,8 @@ import {
 	ShortcutsParameterSpec,
 	ShortcutsEnumerationParameterSpec,
 	ShortcutsBaseParameterSpec,
-	ShortcutsExpandingParameterSpec
+	ShortcutsExpandingParameterSpec,
+	ShortcutsTextInputParameterSpec
 } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { ShortcutsParameterRelationResourceRelationSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsResourceSpec";
 
@@ -63,7 +64,7 @@ export class ErrorBoundary extends React.Component<
 
 export default function CSSDemo(props: {}): JSX.Element {
 	let [actionOutput, setActionOutput] = useState<WFAction>({
-		WFWorkflowActionIdentifier: "is.workflow.actions.downloadurl",
+		WFWorkflowActionIdentifier: "is.workflow.actions.runjavascriptonwebpage",
 		WFWorkflowActionParameters: {}
 	});
 	let [actionJSON, setActionJSON] = useState("");
@@ -224,31 +225,34 @@ export function Action({
 				/>
 				{actionDetails.Parameters!.map(param => {
 					let show = showMore
-						? param.RequiredResources
-							? param.RequiredResources.every(resource => {
-									if (typeof resource === "string") {
-										return true;
-									}
-									if (
-										resource.WFResourceClass === "WFParameterRelationResource"
-									) {
-										if (
-											relationResourceCompare(
-												actionOutput.WFWorkflowActionParameters![
-													resource.WFParameterKey
-												],
-												resource.WFParameterRelation || "==",
-												(resource as any).WFParameterValues || [
-													(resource as any).WFParameterValue
-												]
-											)
-										) {
+						? (param.RequiredResources
+								? param.RequiredResources.every(resource => {
+										if (typeof resource === "string") {
 											return true;
 										}
-										return false;
-									}
-							  })
-							: true
+										if (
+											resource.WFResourceClass === "WFParameterRelationResource"
+										) {
+											if (
+												relationResourceCompare(
+													actionOutput.WFWorkflowActionParameters![
+														resource.WFParameterKey
+													],
+													resource.WFParameterRelation || "==",
+													(resource as any).WFParameterValues || [
+														(resource as any).WFParameterValue
+													]
+												)
+											) {
+												return true;
+											}
+											return false;
+										}
+								  })
+								: true) &&
+						  parameterSummary.every(item =>
+								typeof item === "string" ? true : param.Key !== item.details.Key
+						  )
 						: false;
 					if (param.Class === "WFEnumerationParameter") {
 						return (
@@ -273,6 +277,19 @@ export function Action({
 					} else if (param.Class === "WFDictionaryParameter") {
 						return (
 							<ShortcutsDictionaryParameter
+								paramKey={param.Key}
+								data={param}
+								parameters={actionOutput.WFWorkflowActionParameters!}
+								updateParameter={updateParameter}
+								visible={show}
+							/>
+						);
+					} else if (
+						param.Class === "WFTextInputParameter" &&
+						param.Multiline
+					) {
+						return (
+							<ShortcutsMultilineTextInputParameter
 								paramKey={param.Key}
 								data={param}
 								parameters={actionOutput.WFWorkflowActionParameters!}
@@ -421,6 +438,57 @@ export function ErrorParameter({
 type _pc<N extends string> = {
 	Class: N;
 };
+
+export function ShortcutsMultilineTextInputParameter({
+	paramKey,
+	data,
+	parameters,
+	updateParameter,
+	visible
+}: ParameterProps<ShortcutsTextInputParameterSpec>) {
+	/*
+	{
+	"AutocapitalizationType": "None",
+	"Class": "WFTextInputParameter",
+	"DefaultValue": "var result = [];\n// Get all links from the page\nvar elements = document.querySelectorAll(\"a\");\nfor (let element of elements) {\n\tresult.push({\n\t\t\"url\": element.href,\n\t\t\"text\": element.innerText\n\t});\n}\n\n// Call completion to finish\ncompletion(result);",
+	"DisableAutocorrection": true,
+	"DisableSmartDashes": true,
+	"DisableSmartQuotes": true,
+	"Key": "WFJavaScript",
+	"Label": "JavaScript",
+	"Multiline": true,
+	"Placeholder": "JavaScript",
+	"SyntaxHighlightingType": "JavaScript"
+},
+	
+	*/
+	// if(multiline)
+	let parameterValue =
+		((parameters[paramKey] as WFTextParameter) as string) ||
+		data.DefaultValue ||
+		"";
+	return (
+		<Parameter
+			name={paramKey}
+			visible={visible}
+			className={
+				"multilinetext " +
+				(data.SyntaxHighlightingType ? "size604 " : "size243 ")
+			}
+		>
+			<div className="textpreview">
+				<pre>
+					<code>{parameterValue}</code>
+				</pre>
+			</div>
+			<textarea
+				className="texteditor"
+				value={parameterValue}
+				onChange={e => updateParameter(paramKey, e.currentTarget.value)}
+			></textarea>
+		</Parameter>
+	);
+}
 
 export function EnumParameter({
 	paramKey,
