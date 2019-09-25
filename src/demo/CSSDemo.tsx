@@ -123,7 +123,7 @@ export function Action({
 	setActionOutput: (val: WFAction) => void;
 }): JSX.Element {
 	let identifier = actionOutput.WFWorkflowActionIdentifier;
-	let [showMore, setShowMore] = useState(false); // this is not saved for some reason
+
 	let actionDetails = getActionFromID(identifier)!._data;
 	let parameterSummary = useMemo<ParameterSummaryItem[]>(
 		() =>
@@ -154,6 +154,7 @@ export function Action({
 			}),
 		[actionOutput, setActionOutput]
 	);
+	let showMore = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"];
 	console.log(actionOutput);
 	return (
 		<>
@@ -165,8 +166,9 @@ export function Action({
 					updateParameter={updateParameter}
 				/>
 				<ActionFullWidthShowMoreParameter
-					open={showMore}
-					setOpen={v => setShowMore(v)}
+					paramKey={"__ScPLShowMore"}
+					parameters={actionOutput.WFWorkflowActionParameters!}
+					updateParameter={updateParameter}
 					visible={true}
 				/>
 				{actionDetails.Parameters!.map(param => {
@@ -450,22 +452,25 @@ export function SegmentedButton({
 }
 
 export function ActionFullWidthShowMoreParameter({
-	open,
-	setOpen,
+	paramKey,
+	parameters,
+	updateParameter,
 	visible
 }: {
-	open: boolean;
-	setOpen: (nv: boolean) => void;
+	paramKey: string;
+	parameters: WFParameters;
+	updateParameter: UpdateParametersCallback;
 	visible: boolean;
 }) {
+	let value = parameters[paramKey];
 	return (
 		<LabeledParameter
 			className="showmore"
-			label={open ? "Show Less" : "Show More"}
-			onClick={() => setOpen(!open)}
+			label={value ? "Show Less" : "Show More"}
+			onClick={() => updateParameter(paramKey, !value)}
 			visible={visible}
 		>
-			<Icon icon={open ? "expandopen" : "expandclosed"} />
+			<Icon icon={value ? "expandopen" : "expandclosed"} />
 		</LabeledParameter>
 	);
 }
