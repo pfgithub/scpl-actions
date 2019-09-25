@@ -467,6 +467,8 @@ export function ShortcutsMultilineTextInputParameter({
 		((parameters[paramKey] as WFTextParameter) as string) ||
 		data.DefaultValue ||
 		"";
+	let [scrollTop, setScrollTop] = useState(0);
+	let preRef = useRef<HTMLPreElement>(null); // for ios overscroll support (state breaks it)
 	return (
 		<Parameter
 			name={paramKey}
@@ -476,16 +478,21 @@ export function ShortcutsMultilineTextInputParameter({
 				(data.SyntaxHighlightingType ? "size604 " : "size243 ")
 			}
 		>
-			<div className="textpreview">
-				<pre>
-					<code>{parameterValue}</code>
-				</pre>
-			</div>
 			<textarea
 				className="texteditor"
 				value={parameterValue}
 				onChange={e => updateParameter(paramKey, e.currentTarget.value)}
+				onScroll={
+					e =>
+						(preRef.current!.style.transform = `translate(0, ${-e.currentTarget
+							.scrollTop}px)`) // unfortunately, .scrollTop disables overscroll on iOS safari (but not mac safari)
+				}
 			></textarea>
+			<div className="textpreview">
+				<pre ref={preRef}>
+					<code>{parameterValue}</code>
+				</pre>
+			</div>
 		</Parameter>
 	);
 }
