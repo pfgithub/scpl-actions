@@ -13,11 +13,14 @@ import {
 	WFParameters,
 	WFTextParameter
 } from "scpl/built/src/OutputData";
-import { ShortcutsParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import {
+	ShortcutsParameterSpec,
+	ShortcutsDictionaryParameterSpec
+} from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 
-import {Parameter} from "./Parameter";
-import {cssdata} from "../CSSDemo";
-import {Icon, IconButton} from "../Icon";
+import { Parameter } from "./Parameter";
+import { cssdata, ParameterProps } from "../CSSDemo";
+import { Icon, IconButton } from "../Icon";
 
 import { useState } from "react";
 import { startDragWatcher } from "../util";
@@ -40,10 +43,11 @@ type DictionaryParameterValueType =
 	| { key: string; type: "boolean"; value: string; uid: string };
 
 export function ShortcutsDictionaryParameter({
-	items
+	items,
+	visible
 }: {
 	items: DictionaryParameterValueType[];
-}) {
+} & ParameterProps<ShortcutsDictionaryParameterSpec>) {
 	let [fakeItems, setFakeItems] = useState(items);
 	let [dragging, setDragging] = useState<
 		| {
@@ -69,6 +73,7 @@ export function ShortcutsDictionaryParameter({
 					<Parameter
 						name={"unnamed dictionary"}
 						key={item.uid}
+						visible={visible}
 						className={
 							"dictionary " +
 							(isDragging && dragging!.dragging ? "dragging " : " ") +
@@ -215,7 +220,11 @@ export function ShortcutsDictionaryParameter({
 					</Parameter>
 				];
 			})}
-			<Parameter name={"add new field"} className={"addnewfield"}>
+			<Parameter
+				name={"add new field"}
+				className={"addnewfield"}
+				visible={visible}
+			>
 				<div className="add">
 					<div>
 						<IconButton icon="add" />

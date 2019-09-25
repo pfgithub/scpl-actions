@@ -15,8 +15,11 @@ import {
 } from "scpl/built/src/OutputData";
 import {
 	ShortcutsParameterSpec,
-	ShortcutsEnumerationParameterSpec
+	ShortcutsEnumerationParameterSpec,
+	ShortcutsBaseParameterSpec,
+	ShortcutsExpandingParameterSpec
 } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { ShortcutsParameterRelationResourceRelationSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsResourceSpec";
 
 //@ts-ignore
 import * as cssexported from "./CSSDemo.scss";
@@ -46,6 +49,59 @@ export type UpdateParametersCallback = (
 	key: string,
 	newParameter: WFParameter
 ) => void;
+
+function relationResourceCompare(
+	currentValue: any,
+	relation: ShortcutsParameterRelationResourceRelationSpec | "??",
+	argValues: any[]
+) {
+	const argValue = argValues[0];
+	const currentValueNum = +currentValue;
+	const isNum = !isNaN(currentValueNum);
+	switch (relation) {
+		case "==":
+			return argValues.some(
+				(val: string | number | boolean | object | undefined) =>
+					val === currentValue
+			);
+		case "!=":
+			if (
+				typeof currentValue === "string" ||
+				typeof currentValue === "number" ||
+				typeof currentValue === "boolean"
+			) {
+				return argValues.indexOf(currentValue) === -1;
+			}
+			return false;
+		case ">=":
+			if (!isNum) {
+				return false;
+			}
+			return currentValueNum >= +argValue;
+		case "<=":
+			if (!isNum) {
+				return false;
+			}
+			return currentValueNum <= +argValue;
+		case ">":
+			if (!isNum) {
+				return false;
+			}
+			return currentValueNum > +argValue;
+		case "<":
+			if (!isNum) {
+				return false;
+			}
+			return currentValueNum < +argValue;
+		case "??":
+			return currentValue !== undefined;
+		default:
+			throw new Error(
+				`RelationResource relation type ${relation} is not implemented.`
+			);
+	}
+	return false;
+}
 
 export function Action({ identifier }: { identifier: string }): JSX.Element {
 	let [actionOutput, setActionOutput] = useState<WFAction>({
@@ -96,56 +152,93 @@ export function Action({ identifier }: { identifier: string }): JSX.Element {
 				<ActionFullWidthShowMoreParameter
 					open={showMore}
 					setOpen={v => setShowMore(v)}
+					visible={true}
 				/>
-				{showMore ? (
-					<>
-						{actionDetails.Parameters!.map(param => {
-							if (param.Class === "WFEnumerationParameter") {
-								return (
-									<EnumParameter
-										paramKey={param.Key}
-										data={param}
-										parameters={actionOutput.WFWorkflowActionParameters!}
-										updateParameter={updateParameter}
-									/>
-								);
-							} else {
-								return null;
-							}
-						})}
-						{/*<EnumParameter
-				key={"WFHTTPMethod"}
-				data={
-					actionDetails.Parameters![1] as ShortcutsEnumerationParameterSpec
-				}
-				parameters={actionOutput.WFWorkflowActionParameters!}
-				updateParameter={updateParameter}
-			/>*/}
-						<ExpansionParameter label={"Headers"} open={false} />
-						{/*<EnumParameter
-				label="Request Body"
-				values={["JSON", "Form", "File"]}
-				selected="JSON"
-			/>*/}
-						<ShortcutsDictionaryParameter
-							items={[
-								{ key: "key", value: "value", type: "string", uid: "0" },
-								{
-									key: "other key",
-									value: "other value",
-									type: "string",
-									uid: "1"
-								},
-								{
-									key: "third key",
-									value: "third value",
-									type: "string",
-									uid: "2"
-								}
-							]}
-						/>
-					</>
-				) : null}
+				{actionDetails.Parameters!.map(param => {
+					let show = showMore
+						? param.RequiredResources
+							? param.RequiredResources.every(resource => {
+									if (typeof resource === "string") {
+										return true;
+									}
+									if (
+										resource.WFResourceClass === "WFParameterRelationResource"
+									) {
+										if (
+											relationResourceCompare(
+												actionOutput.WFWorkflowActionParameters![
+													resource.WFParameterKey
+												],
+												resource.WFParameterRelation || "==",
+												(resource as any).WFParameterValues || [
+													(resource as any).WFParameterValue
+												]
+											)
+										) {
+											return true;
+										}
+										return false;
+									}
+							  })
+							: true
+						: false;
+					if (param.Class === "WFEnumerationParameter") {
+						return (
+							<EnumParameter
+								paramKey={param.Key}
+								data={param}
+								parameters={actionOutput.WFWorkflowActionParameters!}
+								updateParameter={updateParameter}
+								visible={show}
+							/>
+						);
+					} else if (param.Class === "WFExpandingParameter") {
+						return (
+							<ExpansionParameter
+								paramKey={param.Key}
+								data={param}
+								parameters={actionOutput.WFWorkflowActionParameters!}
+								updateParameter={updateParameter}
+								visible={show}
+							/>
+						);
+					} else if (param.Class === "WFDictionaryParameter") {
+						return (
+							<ShortcutsDictionaryParameter
+								items={[
+									{ key: "key", value: "value", type: "string", uid: "0" },
+									{
+										key: "other key",
+										value: "other value",
+										type: "string",
+										uid: "1"
+									},
+									{
+										key: "third key",
+										value: "third value",
+										type: "string",
+										uid: "2"
+									}
+								]}
+								paramKey={param.Key}
+								data={param}
+								parameters={actionOutput.WFWorkflowActionParameters!}
+								updateParameter={updateParameter}
+								visible={show}
+							/>
+						);
+					} else {
+						return (
+							<ErrorParameter
+								paramKey={param.Key}
+								data={param}
+								parameters={actionOutput.WFWorkflowActionParameters!}
+								updateParameter={updateParameter}
+								visible={show}
+							/>
+						);
+					}
+				})}
 			</div>
 			<div className="connector space" />
 			<div className="action">
@@ -212,15 +305,22 @@ export function LabeledParameter({
 	label,
 	children,
 	className,
-	onClick
+	onClick,
+	visible
 }: {
 	className?: string;
 	label: string;
 	children: ReactNode;
 	onClick?: () => void;
+	visible: boolean;
 }) {
 	return (
-		<Parameter className={className} name={label} onClick={onClick}>
+		<Parameter
+			className={className}
+			name={label}
+			onClick={onClick}
+			visible={visible}
+		>
 			<div className="label">
 				<div>{label}</div>
 			</div>
@@ -231,16 +331,42 @@ export function LabeledParameter({
 	);
 }
 
+export type ParameterProps<T extends ShortcutsBaseParameterSpec> = {
+	paramKey: string;
+	data: T;
+	parameters: WFParameters;
+	updateParameter: UpdateParametersCallback;
+	visible: boolean;
+};
+
 export function ExpansionParameter({
-	label,
-	open
-}: {
-	label: string;
-	open: boolean;
-}) {
+	paramKey,
+	data,
+	parameters,
+	updateParameter,
+	visible
+}: ParameterProps<ShortcutsExpandingParameterSpec>) {
 	return (
-		<LabeledParameter label={label}>
-			<Icon icon={open ? "expandopen" : "expandclosed"} />
+		<LabeledParameter
+			label={data.Label || "???"}
+			onClick={() => updateParameter(paramKey, !parameters[paramKey])}
+			visible={visible}
+		>
+			<Icon icon={parameters[paramKey] ? "expandopen" : "expandclosed"} />
+		</LabeledParameter>
+	);
+}
+
+export function ErrorParameter({
+	paramKey,
+	data,
+	parameters,
+	updateParameter,
+	visible
+}: ParameterProps<ShortcutsBaseParameterSpec>) {
+	return (
+		<LabeledParameter label={data.Label || "???"} visible={visible}>
+			Not Supported // todo json editor
 		</LabeledParameter>
 	);
 }
@@ -253,15 +379,11 @@ export function EnumParameter({
 	paramKey,
 	data,
 	parameters,
-	updateParameter
-}: {
-	paramKey: string;
-	data: ShortcutsEnumerationParameterSpec & _pc<"WFEnumerationParameter">;
-	parameters: WFParameters;
-	updateParameter: UpdateParametersCallback;
-}) {
+	updateParameter,
+	visible
+}: ParameterProps<ShortcutsEnumerationParameterSpec>) {
 	return (
-		<LabeledParameter label={data.Label || "???"}>
+		<LabeledParameter label={data.Label || "???"} visible={visible}>
 			<SegmentedButton
 				values={data.Items}
 				selected={
@@ -329,16 +451,19 @@ export function SegmentedButton({
 
 export function ActionFullWidthShowMoreParameter({
 	open,
-	setOpen
+	setOpen,
+	visible
 }: {
 	open: boolean;
 	setOpen: (nv: boolean) => void;
+	visible: boolean;
 }) {
 	return (
 		<LabeledParameter
 			className="showmore"
 			label={open ? "Show Less" : "Show More"}
 			onClick={() => setOpen(!open)}
+			visible={visible}
 		>
 			<Icon icon={open ? "expandopen" : "expandclosed"} />
 		</LabeledParameter>
