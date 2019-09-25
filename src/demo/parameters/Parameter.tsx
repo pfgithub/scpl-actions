@@ -12,16 +12,18 @@ export function Parameter({
 	children,
 	name,
 	visible,
+	initAnimation,
 	...more
 }: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
 	className?: string;
 	children: ReactNode;
 	name: string;
 	visible: boolean;
+	initAnimation?: boolean;
 }) {
 	let [ourViewState, setOurViewState] = useState<
 		"visible" | "revealing" | "collapsing" | "collapsed"
-	>(visible ? "visible" : "collapsed");
+	>(visible ? (initAnimation ? "collapsed" : "visible") : "collapsed");
 	useEffect(() => {
 		if (
 			visible &&

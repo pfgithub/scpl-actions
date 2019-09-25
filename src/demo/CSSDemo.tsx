@@ -205,21 +205,6 @@ export function Action({ identifier }: { identifier: string }): JSX.Element {
 					} else if (param.Class === "WFDictionaryParameter") {
 						return (
 							<ShortcutsDictionaryParameter
-								items={[
-									{ key: "key", value: "value", type: "string", uid: "0" },
-									{
-										key: "other key",
-										value: "other value",
-										type: "string",
-										uid: "1"
-									},
-									{
-										key: "third key",
-										value: "third value",
-										type: "string",
-										uid: "2"
-									}
-								]}
 								paramKey={param.Key}
 								data={param}
 								parameters={actionOutput.WFWorkflowActionParameters!}

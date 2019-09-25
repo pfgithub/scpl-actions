@@ -11,7 +11,8 @@ import {
 	WFAction,
 	WFParameter,
 	WFParameters,
-	WFTextParameter
+	WFTextParameter,
+	WFDictionaryParameter
 } from "scpl/built/src/OutputData";
 import {
 	ShortcutsParameterSpec,
@@ -26,16 +27,26 @@ import { useState } from "react";
 import { startDragWatcher } from "../util";
 
 type DictionaryParameterValueType =
-	| { key: string; type: "string"; value: string; uid: string }
-	| { key: string; type: "number"; value: string; uid: string }
 	| {
-			key: string;
+			key: WFTextParameter;
+			type: "string";
+			value: WFTextParameter;
+			uid: string;
+	  }
+	| {
+			key: WFTextParameter;
+			type: "number";
+			value: WFTextParameter;
+			uid: string;
+	  }
+	| {
+			key: WFTextParameter;
 			type: "array";
 			value: DictionaryParameterValueType[];
 			uid: string;
 	  }
 	| {
-			key: string;
+			key: WFTextParameter;
 			type: "dictionary";
 			value: DictionaryParameterValueType[];
 			uid: string;
@@ -43,12 +54,31 @@ type DictionaryParameterValueType =
 	| { key: string; type: "boolean"; value: string; uid: string };
 
 export function ShortcutsDictionaryParameter({
-	items,
+	paramKey,
+	data,
+	parameters,
+	updateParameter,
 	visible
-}: {
-	items: DictionaryParameterValueType[];
-} & ParameterProps<ShortcutsDictionaryParameterSpec>) {
-	let [fakeItems, setFakeItems] = useState(items);
+}: ParameterProps<ShortcutsDictionaryParameterSpec>) {
+	let paramValue = parameters[paramKey] as WFDictionaryParameter;
+	let [fakeItems, setFakeItems] = useState<DictionaryParameterValueType[]>(
+		paramValue
+			? paramValue.Value.WFDictionaryFieldValueItems.map(
+					(i, index): DictionaryParameterValueType => {
+						if (i.WFItemType === 0) {
+							return {
+								key: i.WFKey,
+								uid: "" + index,
+								type: "string",
+								value: i.WFValue
+							};
+						} else {
+							return (undefined as unknown) as DictionaryParameterValueType;
+						}
+					}
+			  )
+			: []
+	);
 	let [dragging, setDragging] = useState<
 		| {
 				uid: string;
@@ -66,7 +96,7 @@ export function ShortcutsDictionaryParameter({
 	return (
 		<div className="dictionaryparameter">
 			<div ref={topElem} />
-			{fakeItems.map((item, i) => {
+			{fakeItems.flatMap((item, i) => {
 				let isDragging = dragging && dragging.uid === item.uid;
 				let isRemoving = removing && removing.uid === item.uid;
 				return [
@@ -74,6 +104,7 @@ export function ShortcutsDictionaryParameter({
 						name={"unnamed dictionary"}
 						key={item.uid}
 						visible={visible}
+						initAnimation={true}
 						className={
 							"dictionary " +
 							(isDragging && dragging!.dragging ? "dragging " : " ") +
@@ -152,7 +183,7 @@ export function ShortcutsDictionaryParameter({
 										newRealPosition / (88 * +cssdata.scale)
 									);
 									newExpectedIndex = Math.max(
-										Math.min(newExpectedIndex, items.length - 1),
+										Math.min(newExpectedIndex, fakeItems.length - 1),
 										0
 									);
 									setDragging(
@@ -224,6 +255,16 @@ export function ShortcutsDictionaryParameter({
 				name={"add new field"}
 				className={"addnewfield"}
 				visible={visible}
+				onClick={() => {
+					let fakeItemsCopy = fakeItems.filter(q => q);
+					fakeItemsCopy.push({
+						key: "" + Math.random(),
+						type: "string",
+						value: "" + Math.random(),
+						uid: "" + Math.random()
+					});
+					setFakeItems(fakeItemsCopy);
+				}}
 			>
 				<div className="add">
 					<div>
