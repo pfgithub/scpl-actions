@@ -8,6 +8,16 @@ $scale: 0.5;
 	scale: $scale;
 }
 
+.error {
+	color: red;
+}
+
+@supports (-webkit-overflow-scrolling: touch) {
+	textarea {
+		transform: translate(-3px, 0); // ios only textarea fix
+	}
+}
+
 .segmentedbutton {
 	background-color: #eeeeee;
 	min-height: $scale * 58px;

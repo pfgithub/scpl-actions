@@ -36,23 +36,74 @@ export type ParameterSummaryItem =
 	| string
 	| { details: ShortcutsParameterSpec; value: WFParameter };
 
+export class ErrorBoundary extends React.Component<
+	{ children: React.ReactNode; error: (error: Error) => React.ReactNode },
+	{ hasError: Error | undefined }
+> {
+	constructor(props: {
+		children: React.ReactNode;
+		error: (error: Error) => React.ReactNode;
+	}) {
+		super(props);
+		this.state = { hasError: undefined };
+	}
+
+	static getDerivedStateFromError(error: Error) {
+		return { hasError: error };
+	}
+
+	render() {
+		if (this.state.hasError) {
+			return this.props.error(this.state.hasError);
+		}
+
+		return this.props.children;
+	}
+}
+
 export default function CSSDemo(props: {}): JSX.Element {
 	let [actionOutput, setActionOutput] = useState<WFAction>({
 		WFWorkflowActionIdentifier: "is.workflow.actions.downloadurl",
 		WFWorkflowActionParameters: {}
 	});
+	let [actionJSON, setActionJSON] = useState("");
+	useEffect(() => {
+		setActionJSON(JSON.stringify(actionOutput, null, "\t"));
+	}, [actionOutput]);
 	let [key, setKey] = useState(0);
 	return (
 		<div className="cssdemo">
 			<button onClick={() => setKey(key + 1)}>Refresh</button>
 			<div className="connector space" />
 			{[
-				<Action
+				<ErrorBoundary
 					key={"" + key}
-					actionOutput={actionOutput}
-					setActionOutput={setActionOutput}
-				/>
+					error={e => (
+						<div className="action">
+							<pre className="error">
+								<code>{e.name + ": " + e.message + "\n\n" + e.stack}</code>
+							</pre>
+						</div>
+					)}
+				>
+					<Action
+						actionOutput={actionOutput}
+						setActionOutput={setActionOutput}
+					/>
+				</ErrorBoundary>
 			]}
+			<div className="connector space" />
+			<div className="action">
+				<textarea
+					rows={actionJSON.split("\n").length}
+					style={{ width: "100%", resize: "none" }}
+					value={actionJSON}
+					onChange={e => setActionJSON(e.currentTarget.value)}
+					onBlur={() => {
+						setActionOutput(JSON.parse(actionJSON));
+					}}
+				></textarea>
+			</div>
 		</div>
 	);
 }
@@ -241,12 +292,6 @@ export function Action({
 						);
 					}
 				})}
-			</div>
-			<div className="connector space" />
-			<div className="action">
-				<pre>
-					<code>{JSON.stringify(actionOutput, null, "\t")}</code>
-				</pre>
 			</div>
 		</>
 	);
