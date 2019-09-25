@@ -350,12 +350,16 @@ $scale: 0.5;
 					width: 100%;
 					pointer-events: none;
 					overflow: hidden;
+					font-size: $scale * 28px;
+					white-space: pre;
+					&.text {
+						font-family: sans-serif;
+					}
+					&.code {
+						font-family: monospace;
+					}
 					pre {
 						margin: 0;
-						code {
-							font-size: $scale * 28px;
-							font-family: monospace;
-						}
 					}
 				}
 				.texteditor {
@@ -367,9 +371,15 @@ $scale: 0.5;
 					border: 0;
 					background: transparent;
 					-webkit-text-fill-color: transparent;
-					font-size: $scale * 28px;
-					font-family: monospace;
 					-webkit-overflow-scrolling: touch;
+
+					font-size: $scale * 28px;
+					&.text {
+						font-family: sans-serif;
+					}
+					&.code {
+						font-family: monospace;
+					}
 				}
 				height: 100000px;
 			}

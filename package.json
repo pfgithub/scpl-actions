@@ -8,6 +8,7 @@
 		"@types/react": "16.9.2",
 		"@types/react-dom": "16.8.5",
 		"@types/react-router-dom": "^4.3.4",
+		"highlight.js": "^9.15.10",
 		"pepjs": "^0.5.2",
 		"react": "^16.9.0",
 		"react-dom": "^16.9.0",
@@ -39,6 +40,7 @@
 		]
 	},
 	"devDependencies": {
+		"@types/highlight.js": "^9.12.3",
 		"node-sass": "^4.12.0",
 		"prettier": "^1.18.2"
 	}

@@ -21,6 +21,7 @@ import {
 	ShortcutsTextInputParameterSpec
 } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { ShortcutsParameterRelationResourceRelationSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsResourceSpec";
+import { Highlight } from "./Highlight";
 
 //@ts-ignore
 import * as cssexported from "./CSSDemo.scss";
@@ -179,16 +180,18 @@ export function Action({
 	let actionDetails = getActionFromID(identifier)!._data;
 	let parameterSummary = useMemo<ParameterSummaryItem[]>(
 		() =>
-			(actionDetails.ParameterSummary as string)
-				.split(/\$\{(.+?)\}/)
-				.map((el, i) =>
-					i % 2 === 1
-						? {
-								details: actionDetails.Parameters!.find(p => p.Key === el)!,
-								value: actionOutput.WFWorkflowActionParameters![el]
-						  }
-						: el
-				),
+			actionDetails.ParameterSummary
+				? (actionDetails.ParameterSummary as string)
+						.split(/\$\{(.+?)\}/)
+						.map((el, i) =>
+							i % 2 === 1
+								? {
+										details: actionDetails.Parameters!.find(p => p.Key === el)!,
+										value: actionOutput.WFWorkflowActionParameters![el]
+								  }
+								: el
+						)
+				: [],
 		[
 			actionDetails.ParameterSummary,
 			actionDetails.Parameters,
@@ -478,9 +481,28 @@ export function ShortcutsMultilineTextInputParameter({
 				(data.SyntaxHighlightingType ? "size604 " : "size243 ")
 			}
 		>
+			<div
+				className={
+					"textpreview " + (data.SyntaxHighlightingType ? "code" : "text")
+				}
+			>
+				{data.SyntaxHighlightingType ? (
+					<pre ref={preRef}>
+						<Highlight language={data.SyntaxHighlightingType!.toLowerCase()}>
+							{"" + parameterValue}
+						</Highlight>
+					</pre>
+				) : (
+					<>{"" + parameterValue}</>
+				)}
+			</div>
 			<textarea
-				className="texteditor"
+				className={
+					"texteditor " + (data.SyntaxHighlightingType ? "code" : "text")
+				}
 				value={parameterValue}
+				spellCheck={false}
+				autoCorrect={undefined}
 				onChange={e => updateParameter(paramKey, e.currentTarget.value)}
 				onScroll={
 					e =>
@@ -488,11 +510,6 @@ export function ShortcutsMultilineTextInputParameter({
 							.scrollTop}px)`) // unfortunately, .scrollTop disables overscroll on iOS safari (but not mac safari)
 				}
 			></textarea>
-			<div className="textpreview">
-				<pre ref={preRef}>
-					<code>{parameterValue}</code>
-				</pre>
-			</div>
 		</Parameter>
 	);
 }
