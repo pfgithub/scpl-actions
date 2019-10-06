@@ -1,5 +1,5 @@
 import hljs from "highlight.js";
-import './Highlight.scss';
+import "./Highlight.scss";
 
 import React, {
 	ReactNode,
@@ -28,12 +28,22 @@ import { Icon, IconButton } from "./Icon";
 import { useState } from "react";
 import { startDragWatcher } from "./util";
 
-export function Highlight({language, children: code}: {language: string, children: string}){
+export function Highlight({
+	language,
+	children: code
+}: {
+	language: string;
+	children: string;
+}) {
 	let ref = useRef<HTMLElement>(null);
 	useEffect(() => {
-		if(ref.current){
+		if (ref.current) {
 			hljs.highlightBlock(ref.current);
 		}
-	}, [code])
-	return <code className={language} ref={ref}>{code}</code>
+	}, [code]);
+	return (
+		<code className={language} ref={ref}>
+			{code}
+		</code>
+	);
 }
