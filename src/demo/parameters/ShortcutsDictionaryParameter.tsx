@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
-import { ShortcutsDictionaryParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { ShortcutsDictionaryParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import {
 	WFDictionaryParameter,
 	WFTextParameter
-} from "scpl/built/src/OutputData";
+} from "shortcuts3types/built/src/OutputData";
 import { cssdata, ParameterProps } from "../CSSDemo";
 import { Icon, IconButton } from "../Icon";
 import { startDragWatcher } from "../util";

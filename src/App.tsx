@@ -9,10 +9,10 @@ export{}
 // 	Link,
 // 	withRouter
 // } from "react-router-dom";
-// import { allActions, getActionFromName } from "scpl";
-// import { WFAction } from "scpl/built/src/ActionData";
+// import { allActions, getActionFromName } from "shortcuts3types";
+// import { WFAction } from "shortcuts3types/built/src/ActionData";
 // import { TextParameter } from "./parameters/TextParameter";
-// import { WFTextInputParameter } from "scpl/built/src/Parameters/WFTextInputParameter";
+// import { WFTextInputParameter } from "shortcuts3types/built/src/Parameters/WFTextInputParameter";
 // import CSSDemo from "./demo/CSSDemo";
 // 
 // let actionList = allActions.sort((a, b) =>

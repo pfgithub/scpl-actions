@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { ShortcutsEnumerationParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { ShortcutsEnumerationParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { ParameterProps } from "../CSSDemo";
 import { LabeledParameterBase } from "./Parameter";
 

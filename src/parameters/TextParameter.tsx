@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { WFTextInputParameter } from "scpl/built/src/Parameters/WFTextInputParameter";
+import { WFTextInputParameter } from "shortcuts3types/built/src/Parameters/WFTextInputParameter";
 
 const ESCAPEDQUOTEDSTRING = (value: string) =>
 	value

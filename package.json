@@ -2,6 +2,7 @@
 	"name": "scpl-documentation",
 	"version": "0.1.0",
 	"private": true,
+	"homepage": "https://preview3.pfg.pw/",
 	"dependencies": {
 		"@types/jest": "24.0.17",
 		"@types/node": "12.7.2",
@@ -16,7 +17,7 @@
 		"react-markdown": "^4.1.0",
 		"react-router-dom": "^5.0.1",
 		"react-scripts": "3.1.1",
-		"scpl": "../scpl",
+		"shortcuts3types": "^0.1.0",
 		"typescript": "3.5.3",
 		"uuid": "^3.3.3"
 	},

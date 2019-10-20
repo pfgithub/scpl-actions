@@ -1,5 +1,5 @@
 import React from "react";
-import { ShortcutsBaseParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { ShortcutsBaseParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { ParameterProps } from "../CSSDemo";
 import { LabeledParameterBase } from "./Parameter";
 

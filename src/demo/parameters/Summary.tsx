@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import {
 	ShortcutsTextInputParameterSpec,
 	ShortcutsStepperParameterSpec
-} from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+} from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import {
 	WFParameters,
 	WFTextParameter,
 	WFAttachmentParameter
-} from "scpl/built/src/OutputData";
+} from "shortcuts3types/built/src/OutputData";
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 import { ShortcutsTextRender } from "./ShortcutsTextRender";
 

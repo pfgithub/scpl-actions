@@ -5,16 +5,16 @@ import React, {
 	useMemo,
 	useCallback
 } from "react";
-import { allActions, getActionFromName } from "scpl";
-import { getActionFromID } from "scpl/built/src/ActionData";
+import { allActions, getActionFromName } from "shortcuts3types";
+import { getActionFromID } from "shortcuts3types/built/src/ActionData";
 import {
 	WFAction,
 	WFParameter,
 	WFParameters,
 	WFTextParameter
-} from "scpl/built/src/OutputData";
-import { ShortcutsParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { ShortcutsActionIconName } from "scpl/built/src/Data/ActionDataTypes/Strings/ShortcutsActionIconName";
+} from "shortcuts3types/built/src/OutputData";
+import { ShortcutsParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { ShortcutsActionIconName } from "shortcuts3types/built/src/Data/ActionDataTypes/Strings/ShortcutsActionIconName";
 import { BuiltinIcon, BuiltinIconValueMap } from "./icons";
 
 export type IconString =

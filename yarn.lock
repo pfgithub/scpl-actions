@@ -2141,15 +2141,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-big-integer@^1.6.44:
+big-integer@^1.6.44, big-integer@^1.6.7:
   version "1.6.47"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.47.tgz#e1e9320e26c4cc81f64fbf4b3bb20e025bf18e2d"
   integrity sha512-9t9f7X3as2XGX8b52GqG6ox0GvIdM86LyIXASJnDCFhYNgt+A+MByQZ3W2PyMRZjEvG5f8TEbSPfEotVuMJnQg==
-
-big-integer@^1.6.7:
-  version "1.6.44"
-  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.44.tgz#4ee9ae5f5839fc11ade338fea216b4513454a539"
-  integrity sha512-7MzElZPTyJ2fNvBkPxtFQ2fWIkVmuzw41+BZHSzpEq3ymB2MfeKp1+yXl/tS75xCx+WnyV+yb0kp+K1C3UNwmQ==
 
 big.js@^5.2.2:
   version "5.2.2"
@@ -9406,14 +9401,6 @@ schema-utils@^2.0.0, schema-utils@^2.0.1:
     ajv "^6.1.0"
     ajv-keywords "^3.1.0"
 
-scpl@../scpl:
-  version "1.14.0"
-  dependencies:
-    bplist-creator "^0.0.7"
-    bplist-parser "^0.1.1"
-    plist "^3.0.1"
-    uuid "^3.3.2"
-
 scss-tokenizer@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/scss-tokenizer/-/scss-tokenizer-0.2.3.tgz#8eb06db9a9723333824d3f5530641149847ce5d1"
@@ -9587,6 +9574,16 @@ shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
+
+shortcuts3types@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/shortcuts3types/-/shortcuts3types-0.1.0.tgz#82c34d5f8707e82b8e4cc49ea8c3f9b2c63afd5b"
+  integrity sha512-Kwe8bHDbNJ5Ls7rA2kHBKBWpsScNOxUy0yX4xSBl484ajKKiSf/jm/GQBY6+iB74OF6GYEZ5xiB3syFVPT7aSw==
+  dependencies:
+    bplist-creator "^0.0.7"
+    bplist-parser "^0.1.1"
+    plist "^3.0.1"
+    uuid "^3.3.2"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"

@@ -1,5 +1,5 @@
 import React from "react";
-import { WFParameters } from "scpl/built/src/OutputData";
+import { WFParameters } from "shortcuts3types/built/src/OutputData";
 import { Icon } from "../Icon";
 import { UpdateParametersCallback } from "./Action";
 import { LabeledParameterBase } from "./Parameter";

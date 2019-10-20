@@ -1,7 +1,7 @@
 import * as bplistparser from "bplist-parser";
 import React, { useEffect, useMemo, useState } from "react";
-import { ShortcutsBaseParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { WFAction, WFParameters, WFShortcut } from "scpl/built/src/OutputData";
+import { ShortcutsBaseParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { WFAction, WFParameters, WFShortcut } from "shortcuts3types/built/src/OutputData";
 import uuidv4 from "uuid/v4";
 //@ts-ignore
 import * as cssexported from "./CSSDemo.scss";

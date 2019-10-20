@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo } from "react";
-import { getActionFromID } from "scpl/built/src/ActionData";
-import { ShortcutsActionSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsActionSpec";
-import { ShortcutsParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { ShortcutsParameterRelationResourceRelationSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsResourceSpec";
-import { WFAction, WFParameter } from "scpl/built/src/OutputData";
+import { getActionFromID } from "shortcuts3types/built/src/ActionData";
+import { ShortcutsActionSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsActionSpec";
+import { ShortcutsParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { ShortcutsParameterRelationResourceRelationSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsResourceSpec";
+import { WFAction, WFParameter } from "shortcuts3types/built/src/OutputData";
 import { Icon, IconButton, IconString, ActionIcon } from "../Icon";
 import { ActionFullWidthShowMoreParameter, Parameter } from "./Parameter";
 import { ActionParameterSummary } from "./Summary";
