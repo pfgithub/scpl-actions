@@ -32,6 +32,7 @@ import { startDragWatcher } from "../util";
 import { Icon, IconButton, IconString } from "../Icon";
 import { ShortcutsActionSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsActionSpec";
 import { ShortcutsParameterRelationResourceRelationSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsResourceSpec";
+import { ActionParameterSummary } from "./Summary";
 
 export type UpdateParametersCallback = (
 	key: string,
@@ -162,11 +163,11 @@ export function DefinitelyAction({
 		<>
 			<div className="action">
 				<ActionTitle icon={"download"} name={actionDetails.Attribution!} />
-				{/*<ActionParameterSummary
+				<ActionParameterSummary
 					items={parameterSummary}
 					parameters={actionOutput.WFWorkflowActionParameters!}
 					updateParameter={updateParameter}
-				/>*/}
+				/>
 				<ActionFullWidthShowMoreParameter
 					paramKey={"__ScPLShowMore"}
 					parameters={actionOutput.WFWorkflowActionParameters!}

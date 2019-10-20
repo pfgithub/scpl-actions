@@ -108,33 +108,6 @@ export default function CSSDemo(props: {}): JSX.Element {
 	);
 }
 
-export function SummaryTextInput({
-	value,
-	onChange
-}: {
-	value: string;
-	onChange: (v: string) => void;
-}) {
-	let [editing, setEditing] = useState(false);
-
-	if (!editing) {
-		return (
-			<span className="input" onClick={e => setEditing(true)}>
-				{value}
-			</span> // !!!!accessability
-		);
-	}
-	return (
-		<input
-			className="input"
-			value={value}
-			autoFocus
-			onChange={e => onChange(e.currentTarget.value)}
-			onBlur={e => setEditing(false)} // !!!!bad
-		/>
-	);
-}
-
 export type ParameterProps<T extends ShortcutsBaseParameterSpec> = {
 	paramKey: string;
 	data: T;
