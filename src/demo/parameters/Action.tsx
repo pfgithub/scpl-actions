@@ -88,7 +88,6 @@ function relationResourceCompare(
 				`RelationResource relation type ${relation} is not implemented.`
 			);
 	}
-	return false;
 }
 
 export function DefinitelyAction({
@@ -138,6 +137,20 @@ export function DefinitelyAction({
 				)
 		  )
 		: [];
+
+	let useShowMoreButton = !(
+		actionDetails.ParameterCollapsingBehavior === "Never" ||
+		parameterSummary.length === 0
+	);
+	if (
+		useShowMoreButton &&
+		actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"] === undefined
+	) {
+		actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"] =
+			actionDetails.ParameterCollapsingBehavior === "DefaultBeginExpanded"
+				? true
+				: false;
+	}
 	let showMore = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"];
 	console.log(actionOutput);
 	return (
@@ -159,12 +172,14 @@ export function DefinitelyAction({
 				/>
 				{remainingParameters.length > 0 ? (
 					<>
-						<ActionFullWidthShowMoreParameter
-							paramKey={"__ScPLShowMore"}
-							parameters={actionOutput.WFWorkflowActionParameters!}
-							updateParameter={updateParameter}
-							visible={true}
-						/>
+						{useShowMoreButton ? (
+							<ActionFullWidthShowMoreParameter
+								paramKey={"__ScPLShowMore"}
+								parameters={actionOutput.WFWorkflowActionParameters!}
+								updateParameter={updateParameter}
+								visible={true}
+							/>
+						) : null}
 						{remainingParameters.map(param => {
 							let show = showMore
 								? param.RequiredResources
