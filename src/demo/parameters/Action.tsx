@@ -143,7 +143,15 @@ export function DefinitelyAction({
 	return (
 		<>
 			<div className="action">
-				<ActionTitle icon={"download"} name={actionDetails.Attribution!} />
+				<ActionTitle
+					icon={actionDetails.IconName || "NoIcon.png"}
+					name={
+						actionDetails.Attribution ||
+						actionDetails.Category ||
+						actionDetails.Name ||
+						"unnamed"
+					}
+				/>
 				<ActionParameterSummary
 					items={parameterSummary}
 					parameters={actionOutput.WFWorkflowActionParameters!}

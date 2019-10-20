@@ -14,6 +14,7 @@ import {
 	WFTextParameter
 } from "scpl/built/src/OutputData";
 import { ShortcutsParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { ShortcutsActionIconName } from "scpl/built/src/Data/ActionDataTypes/Strings/ShortcutsActionIconName";
 
 export type IconString =
 	| "download"
@@ -26,9 +27,14 @@ export type IconString =
 	| "add"
 	| "expandopen"
 	| "expandclosed"
-	| "delete";
+	| "delete"
+	| ShortcutsActionIconName
+	| "NoIcon.png";
 
 export function Icon({ icon }: { icon: IconString }) {
+	if (icon.endsWith(".png")) {
+		icon = icon.toLowerCase().replace(/\.png$/, "") as IconString;
+	}
 	return <div className={"icon " + icon} aria-label={icon + " icon"}></div>;
 }
 
