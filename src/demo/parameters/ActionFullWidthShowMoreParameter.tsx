@@ -1,8 +1,9 @@
 import React from "react";
 import { WFParameters } from "scpl/built/src/OutputData";
 import { Icon } from "../Icon";
-import { LabeledParameterBase } from "./Parameter";
 import { UpdateParametersCallback } from "./Action";
+import { LabeledParameterBase } from "./Parameter";
+
 export function ActionFullWidthShowMoreParameter({
 	paramKey,
 	parameters,

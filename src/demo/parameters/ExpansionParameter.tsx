@@ -3,6 +3,7 @@ import { ShortcutsExpandingParameterSpec } from "scpl/built/src/Data/ActionDataT
 import { ParameterProps } from "../CSSDemo";
 import { Icon } from "../Icon";
 import { LabeledParameterBase } from "./Parameter";
+
 export function ExpansionParameter({
 	paramKey,
 	data,

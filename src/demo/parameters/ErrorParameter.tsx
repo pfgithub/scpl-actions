@@ -1,7 +1,8 @@
 import React from "react";
-import { ParameterProps } from "../CSSDemo";
 import { ShortcutsBaseParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { ParameterProps } from "../CSSDemo";
 import { LabeledParameterBase } from "./Parameter";
+
 export function ErrorParameter({
 	paramKey,
 	data,

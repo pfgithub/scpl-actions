@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
-import { WFTextParameter } from "scpl/built/src/OutputData";
+import React, { useRef, useState } from "react";
 import { ShortcutsTextInputParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { Highlight } from "../Highlight";
+import { WFTextParameter } from "scpl/built/src/OutputData";
 import { ParameterProps } from "../CSSDemo";
-import { useState } from "react";
+import { Highlight } from "../Highlight";
 import { ParameterBase } from "./Parameter";
+
 export function ShortcutsMultilineTextInputParameter({
 	paramKey,
 	data,

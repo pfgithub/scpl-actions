@@ -1,32 +1,6 @@
-import React, {
-	ReactNode,
-	useRef,
-	useEffect,
-	useMemo,
-	useCallback
-} from "react";
-import { allActions, getActionFromName } from "scpl";
-import { getActionFromID } from "scpl/built/src/ActionData";
-import {
-	WFAction,
-	WFParameter,
-	WFParameters,
-	WFTextParameter,
-	WFDictionaryParameter
-} from "scpl/built/src/OutputData";
-import {
-	ShortcutsParameterSpec,
-	ShortcutsDictionaryParameterSpec,
-	ShortcutsTextInputParameterSpec
-} from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-
-import { ParameterBase } from "./Parameter";
-import { cssdata, ParameterProps } from "../CSSDemo";
-import { Icon, IconButton } from "../Icon";
-
-import { useState } from "react";
-import { startDragWatcher } from "../util";
-
+import React, { useState } from "react";
+import { ShortcutsTextInputParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { WFParameters, WFTextParameter } from "scpl/built/src/OutputData";
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 
 export function ParameterSummaryItemComponent({

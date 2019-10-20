@@ -1,41 +1,12 @@
-import React, {
-	ReactNode,
-	useRef,
-	useEffect,
-	useMemo,
-	useCallback
-} from "react";
-import { allActions, getActionFromName } from "scpl";
-import { getActionFromID } from "scpl/built/src/ActionData";
-import {
-	WFAction,
-	WFParameter,
-	WFParameters,
-	WFTextParameter,
-	WFShortcut
-} from "scpl/built/src/OutputData";
-import {
-	ShortcutsParameterSpec,
-	ShortcutsEnumerationParameterSpec,
-	ShortcutsBaseParameterSpec,
-	ShortcutsExpandingParameterSpec,
-	ShortcutsTextInputParameterSpec
-} from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { Highlight } from "./Highlight";
-
+import * as bplistparser from "bplist-parser";
+import React, { useEffect, useMemo, useState } from "react";
+import { ShortcutsBaseParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import { WFAction, WFParameters, WFShortcut } from "scpl/built/src/OutputData";
+import uuidv4 from "uuid/v4";
 //@ts-ignore
 import * as cssexported from "./CSSDemo.scss";
-import { useState } from "react";
-
-import { Icon, IconButton, IconString } from "./Icon";
-
-import { ParameterBase } from "./parameters/Parameter";
-import { ShortcutsDictionaryParameter } from "./parameters/ShortcutsDictionaryParameter";
-import { TextWithVariables } from "./TextWithVariables";
 import { Action, UpdateParametersCallback } from "./parameters/Action";
 import { useFetch } from "./useFetch";
-import * as bplistparser from "bplist-parser";
-import uuidv4 from "uuid/v4";
 
 //@ts-ignore
 bplistparser.maxObjectCount = 9999999;
