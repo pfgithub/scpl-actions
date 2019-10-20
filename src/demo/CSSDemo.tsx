@@ -112,6 +112,9 @@ export function ShortcutViewerEditor({
 			.padStart(6, "0")
 			.toUpperCase();
 
+	let indentLevel = 0;
+	// TODO allow collapsing indents
+
 	return (
 		<div>
 			<div className="cssdemo">
@@ -124,6 +127,18 @@ export function ShortcutViewerEditor({
 				</div>
 				{editedShortcut[0].WFWorkflowActions.map((action, i) => {
 					let key = action.WFWorkflowActionParameters!.UUID;
+					let controlFlowMode = action.WFWorkflowActionParameters!
+						.WFControlFlowMode;
+					let thisIndentLevel = indentLevel;
+					if (controlFlowMode === undefined) {
+					} else if (controlFlowMode === 0) {
+						indentLevel++;
+					} else if (controlFlowMode === 1) {
+						thisIndentLevel--;
+					} else if (controlFlowMode === 2) {
+						indentLevel--;
+						thisIndentLevel = indentLevel;
+					}
 					return (
 						<>
 							<div className="connector space" />
@@ -153,6 +168,7 @@ export function ShortcutViewerEditor({
 											}
 										]);
 									}}
+									indentLevel={thisIndentLevel}
 								/>
 							</ErrorBoundary>
 						</>
@@ -170,53 +186,6 @@ export function ShortcutViewerEditor({
 						}}
 					></textarea>
 				</div>
-			</div>
-		</div>
-	);
-}
-
-export function CSSDemo(props: {}): JSX.Element {
-	let [actionOutput, setActionOutput] = useState<WFAction>({
-		WFWorkflowActionIdentifier: "is.workflow.actions.downloadurl",
-		WFWorkflowActionParameters: {}
-	});
-	let [actionJSON, setActionJSON] = useState("");
-	useEffect(() => {
-		setActionJSON(JSON.stringify(actionOutput, null, "\t"));
-	}, [actionOutput]);
-	let [key, setKey] = useState(0);
-	return (
-		<div className="cssdemo">
-			<button onClick={() => setKey(key + 1)}>Refresh</button>
-			<div className="connector space" />
-			{[
-				<ErrorBoundary
-					key={"" + key}
-					error={e => (
-						<div className="action">
-							<pre className="error">
-								<code>{e.name + ": " + e.message + "\n\n" + e.stack}</code>
-							</pre>
-						</div>
-					)}
-				>
-					<Action
-						actionOutput={actionOutput}
-						setActionOutput={setActionOutput}
-					/>
-				</ErrorBoundary>
-			]}
-			<div className="connector space" />
-			<div className="action">
-				<textarea
-					rows={actionJSON.split("\n").length}
-					style={{ width: "100%", resize: "none" }}
-					value={actionJSON}
-					onChange={e => setActionJSON(e.currentTarget.value)}
-					onBlur={() => {
-						setActionOutput(JSON.parse(actionJSON));
-					}}
-				></textarea>
 			</div>
 		</div>
 	);

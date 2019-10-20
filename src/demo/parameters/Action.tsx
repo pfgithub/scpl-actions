@@ -19,10 +19,12 @@ export type ParameterSummaryItem =
 
 export function Action({
 	actionOutput,
-	setActionOutput
+	setActionOutput,
+	indentLevel
 }: {
 	actionOutput: WFAction;
 	setActionOutput: (val: WFAction) => void;
+	indentLevel: number;
 }): JSX.Element {
 	let identifier = actionOutput.WFWorkflowActionIdentifier;
 	let _tempAction = getActionFromID(identifier);
@@ -34,6 +36,7 @@ export function Action({
 			actionOutput={actionOutput}
 			setActionOutput={setActionOutput}
 			actionDetails={_tempAction._data}
+			indentLevel={indentLevel}
 		/>
 	);
 }
@@ -93,11 +96,13 @@ function relationResourceCompare(
 export function DefinitelyAction({
 	actionOutput,
 	setActionOutput,
-	actionDetails
+	actionDetails,
+	indentLevel
 }: {
 	actionOutput: WFAction;
 	setActionOutput: (val: WFAction) => void;
 	actionDetails: ShortcutsActionSpec;
+	indentLevel: number;
 }): JSX.Element {
 	let parameterSummary = useMemo<ParameterSummaryItem[]>(
 		() =>
@@ -160,7 +165,8 @@ export function DefinitelyAction({
 			<div
 				className={
 					"action " +
-					(actionDetails.ActionClass === "WFCommentAction" ? "comment " : "")
+					((actionDetails.ActionClass === "WFCommentAction" ? "comment " : "") +
+						`indent${Math.min(indentLevel, 4)} `)
 				}
 			>
 				<ActionTitle
