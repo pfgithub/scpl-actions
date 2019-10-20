@@ -131,6 +131,11 @@ export function DefinitelyAction({
 			}),
 		[actionOutput, setActionOutput]
 	);
+	let remainingParameters = actionDetails.Parameters!.filter(param =>
+		parameterSummary.every(item =>
+			typeof item === "string" ? true : param.Key !== item.details.Key
+		)
+	);
 	let showMore = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"];
 	console.log(actionOutput);
 	return (
@@ -142,53 +147,55 @@ export function DefinitelyAction({
 					parameters={actionOutput.WFWorkflowActionParameters!}
 					updateParameter={updateParameter}
 				/>
-				<ActionFullWidthShowMoreParameter
-					paramKey={"__ScPLShowMore"}
-					parameters={actionOutput.WFWorkflowActionParameters!}
-					updateParameter={updateParameter}
-					visible={true}
-				/>
-				{actionDetails.Parameters!.map(param => {
-					let show = showMore
-						? (param.RequiredResources
-								? param.RequiredResources.every(resource => {
-										if (typeof resource === "string") {
-											return true;
-										}
-										if (
-											resource.WFResourceClass === "WFParameterRelationResource"
-										) {
-											if (
-												relationResourceCompare(
-													actionOutput.WFWorkflowActionParameters![
-														resource.WFParameterKey
-													],
-													resource.WFParameterRelation || "==",
-													(resource as any).WFParameterValues || [
-														(resource as any).WFParameterValue
-													]
-												)
-											) {
-												return true;
-											}
-											return false;
-										}
-								  })
-								: true) &&
-						  parameterSummary.every(item =>
-								typeof item === "string" ? true : param.Key !== item.details.Key
-						  )
-						: false;
-					return (
-						<Parameter
-							paramKey={param.Key}
-							data={param}
+				{remainingParameters.length > 0 ? (
+					<>
+						<ActionFullWidthShowMoreParameter
+							paramKey={"__ScPLShowMore"}
 							parameters={actionOutput.WFWorkflowActionParameters!}
 							updateParameter={updateParameter}
-							visible={show}
+							visible={true}
 						/>
-					);
-				})}
+						{remainingParameters.map(param => {
+							let show = showMore
+								? param.RequiredResources
+									? param.RequiredResources.every(resource => {
+											if (typeof resource === "string") {
+												return true;
+											}
+											if (
+												resource.WFResourceClass ===
+												"WFParameterRelationResource"
+											) {
+												if (
+													relationResourceCompare(
+														actionOutput.WFWorkflowActionParameters![
+															resource.WFParameterKey
+														],
+														resource.WFParameterRelation || "==",
+														(resource as any).WFParameterValues || [
+															(resource as any).WFParameterValue
+														]
+													)
+												) {
+													return true;
+												}
+												return false;
+											}
+									  })
+									: true
+								: false;
+							return (
+								<Parameter
+									paramKey={param.Key}
+									data={param}
+									parameters={actionOutput.WFWorkflowActionParameters!}
+									updateParameter={updateParameter}
+									visible={show}
+								/>
+							);
+						})}
+					</>
+				) : null}
 			</div>
 		</>
 	);
