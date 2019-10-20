@@ -8,6 +8,7 @@ import { cssdata, ParameterProps } from "../CSSDemo";
 import { Icon, IconButton } from "../Icon";
 import { startDragWatcher } from "../util";
 import { ParameterBase } from "./Parameter";
+import { ShortcutsTextRender } from "./ShortcutsTextRender";
 
 type DictionaryParameterValueType =
 	| {
@@ -133,7 +134,7 @@ export function ShortcutsDictionaryParameter({
 							</div>
 						</div>
 						<div className="key">
-							<div>{JSON.stringify(item.key)}</div>
+							<ShortcutsTextRender text={item.key} />
 						</div>
 						<div className="line"></div>
 						<div className="value">
