@@ -91,8 +91,13 @@ export function ShortcutsDictionaryParameter({
 						initAnimation={true}
 						className={
 							"dictionary " +
-							(isDragging && dragging!.dragging ? "dragging " : " ") +
-							(isRemoving ? "removing " : " ")
+							(isDragging && dragging!.dragging
+								? "dragging "
+								: isDragging
+								? "dropping "
+								: "") +
+							(isRemoving ? "removing " : "") +
+							(!dragging && !removing ? "static " : "")
 						}
 						style={
 							isDragging

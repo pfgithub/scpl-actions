@@ -245,6 +245,13 @@ $scale: 0.5;
 					0.1s max-height ease-in-out, 0.1s padding ease-in-out;
 				background-color: white;
 				max-height: $scale * 88px;
+				&.static {
+					transition: 0.1s box-shadow, 0.1s opacity, 0.1s max-height ease-in-out,
+						0.1s padding ease-in-out;
+				}
+				&.dropping {
+					z-index: 1;
+				}
 				&:not(.dragging)::before {
 					left: 32px * $scale;
 				}
