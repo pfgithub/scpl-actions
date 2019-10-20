@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { ShortcutsTextInputParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { WFParameters, WFTextParameter } from "scpl/built/src/OutputData";
+import {
+	ShortcutsTextInputParameterSpec,
+	ShortcutsStepperParameterSpec
+} from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
+import {
+	WFParameters,
+	WFTextParameter,
+	WFAttachmentParameter
+} from "scpl/built/src/OutputData";
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 import { ShortcutsTextRender } from "./ShortcutsTextRender";
 
@@ -22,6 +29,19 @@ export function ParameterSummaryItemComponent({
 			<SummaryTextInput
 				data={item.details}
 				value={(item.value || "") as WFTextParameter}
+				onChange={v => updateParameter(item.details.Key, v)}
+			/>
+		);
+	}
+	if (item.details.Class === "WFStepperParameter") {
+		return (
+			<SummaryStepperParameter
+				data={item.details}
+				value={
+					(item.value || item.details.DefaultValue || 1) as
+						| number
+						| WFAttachmentParameter
+				}
 				onChange={v => updateParameter(item.details.Key, v)}
 			/>
 		);
@@ -109,5 +129,24 @@ export function SummaryTextInput({
 				onChange(unmakeEditingValue(e.currentTarget.value));
 			}} // !!!!bad
 		/>
+	);
+}
+
+export function SummaryStepperParameter({
+	value,
+	onChange,
+	data
+}: {
+	value: number | WFAttachmentParameter;
+	data: ShortcutsStepperParameterSpec;
+	onChange: (v: WFTextParameter) => void;
+}) {
+	return (
+		<span className="input">
+			{value}{" "}
+			{(
+				(value === 1 ? data.StepperNoun : data.StepperPluralNoun) || ""
+			).toLowerCase()}
+		</span> // !!!!accessability
 	);
 }
