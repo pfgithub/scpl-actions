@@ -96,7 +96,7 @@ export function ShortcutsDictionaryParameter({
 					<ParameterBase
 						name={"unnamed dictionary"}
 						key={item.uid}
-						visible={visible}
+						visible={visible && !(isRemoving && removing!.removing === false)}
 						initAnimation={true}
 						className={
 							"dictionary " +
@@ -105,14 +105,7 @@ export function ShortcutsDictionaryParameter({
 								: isDragging
 								? "dropping "
 								: "") +
-							(isRemoving && removing!.removing === true
-								? "removing "
-								: isRemoving && removing!.removing === false
-								? "removingnow"
-								: "") +
-							(removing && !removing.removing && i > removing.index
-								? "aboveremovingnow "
-								: "") +
+							(isRemoving && removing!.removing === true ? "removing " : "") +
 							(!dragging && !removing ? "static " : "")
 						}
 						style={
