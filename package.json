@@ -8,6 +8,7 @@
 		"@types/react": "16.9.2",
 		"@types/react-dom": "16.8.5",
 		"@types/react-router-dom": "^4.3.4",
+		"bplist-parser": "^0.2.0",
 		"highlight.js": "^9.15.10",
 		"pepjs": "^0.5.2",
 		"react": "^16.9.0",
@@ -16,7 +17,8 @@
 		"react-router-dom": "^5.0.1",
 		"react-scripts": "3.1.1",
 		"scpl": "../scpl",
-		"typescript": "3.5.3"
+		"typescript": "3.5.3",
+		"uuid": "^3.3.3"
 	},
 	"scripts": {
 		"start": "react-scripts start",
@@ -41,6 +43,7 @@
 	},
 	"devDependencies": {
 		"@types/highlight.js": "^9.12.3",
+		"@types/uuid": "^3.4.5",
 		"node-sass": "^4.12.0",
 		"prettier": "^1.18.2"
 	}
