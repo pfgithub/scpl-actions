@@ -18,6 +18,15 @@ $scale: 0.5;
 	}
 }
 
+@font-face {
+	font-family: "WorkflowGlyphs";
+	src: local("WorkflowGlyphs.ttf"), url(./WorkflowGlyphs.ttf) format("ttf");
+	src: local("WorkflowGlyphs-Regular.woff"),
+		url(./WorkflowGlyphs-Regular.woff) format("woff");
+	src: local("WorkflowGlyphs-Regular.woff2"),
+		url(./WorkflowGlyphs-Regular.woff2) format("woff2");
+}
+
 .segmentedbutton {
 	background-color: #eeeeee;
 	min-height: $scale * 58px;
@@ -101,6 +110,9 @@ $scale: 0.5;
 	background-color: #efeff2;
 	padding: $scale * 50px;
 	font-family: sans-serif;
+	.shortcutnameicon {
+		font-family: WorkflowGlyphs;
+	}
 	.icon {
 		width: $scale * 40px;
 		height: $scale * 40px;

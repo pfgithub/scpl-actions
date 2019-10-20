@@ -107,6 +107,20 @@ export function ShortcutViewerEditor({
 	return (
 		<div>
 			<div className="cssdemo">
+				<p
+					className="shortcutnameicon"
+					style={{
+						backgroundColor:
+							"#" +
+							editedShortcut[0].WFWorkflowIcon.WFWorkflowIconStartColor.toString(
+								16
+							).padStart(6, "0")
+					}}
+				>
+					{String.fromCodePoint(
+						editedShortcut[0].WFWorkflowIcon.WFWorkflowIconGlyphNumber
+					)}
+				</p>
 				{editedShortcut[0].WFWorkflowActions.map((action, i) => {
 					let key = action.WFWorkflowActionParameters!.UUID;
 					return (
