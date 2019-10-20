@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ShortcutsTextInputParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { WFParameters, WFTextParameter } from "scpl/built/src/OutputData";
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
+import { ShortcutsTextRender } from "./ShortcutsTextRender";
 
 export function ParameterSummaryItemComponent({
 	item,
@@ -20,7 +21,7 @@ export function ParameterSummaryItemComponent({
 		return (
 			<SummaryTextInput
 				data={item.details}
-				value={(item.value || "") as string}
+				value={(item.value || "") as WFTextParameter}
 				onChange={v => updateParameter(item.details.Key, v)}
 			/>
 		);
@@ -59,34 +60,50 @@ export function SummaryTextInput({
 	onChange,
 	data
 }: {
-	value: string;
+	value: WFTextParameter;
 	data: ShortcutsTextInputParameterSpec;
-	onChange: (v: string) => void;
+	onChange: (v: WFTextParameter) => void;
 }) {
-	let [editing, setEditing] = useState(false);
+	// let [editing, setEditing] = useState(false);
+	let [editingValue, setEditingValue] = useState<string | undefined>(undefined);
+	let makeEditingValue = (value: WFTextParameter): string => {
+		return JSON.stringify(value);
+	};
+	let unmakeEditingValue = (v: string): WFTextParameter => {
+		return v;
+	};
 
-	if (!editing) {
+	if (editingValue === undefined) {
 		if (!value) {
 			return (
-				<span className="input placeholder" onClick={e => setEditing(true)}>
+				<span
+					className="input placeholder"
+					onClick={e => setEditingValue(makeEditingValue(""))}
+				>
 					{"" + data.Placeholder}
 				</span> // !!!!accessability
 			);
 		}
 		return (
-			<span className="input" onClick={e => setEditing(true)}>
-				{value}
+			<span
+				className="input"
+				onClick={e => setEditingValue(makeEditingValue(value))}
+			>
+				<ShortcutsTextRender text={value}></ShortcutsTextRender>
 			</span> // !!!!accessability
 		);
 	}
 	return (
 		<input
 			className="input"
-			value={value}
+			value={editingValue}
 			autoFocus
 			placeholder={"" + data.Placeholder}
-			onChange={e => onChange(e.currentTarget.value)}
-			onBlur={e => setEditing(false)} // !!!!bad
+			onChange={e => setEditingValue(e.currentTarget.value)}
+			onBlur={e => {
+				setEditingValue(undefined);
+				onChange(unmakeEditingValue(e.currentTarget.value));
+			}} // !!!!bad
 		/>
 	);
 }

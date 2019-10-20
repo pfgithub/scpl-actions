@@ -103,16 +103,16 @@ export function DefinitelyAction({
 	let parameterSummary = useMemo<ParameterSummaryItem[]>(
 		() =>
 			actionDetails.ParameterSummary
-				? (actionDetails.ParameterSummary as string)
-						.split(/\$\{(.+?)\}/)
-						.map((el, i) =>
+				? typeof actionDetails.ParameterSummary === "string"
+					? actionDetails.ParameterSummary.split(/\$\{(.+?)\}/).map((el, i) =>
 							i % 2 === 1
 								? {
 										details: actionDetails.Parameters!.find(p => p.Key === el)!,
 										value: actionOutput.WFWorkflowActionParameters![el]
 								  }
 								: el
-						)
+					  )
+					: []
 				: [],
 		[
 			actionDetails.ParameterSummary,
