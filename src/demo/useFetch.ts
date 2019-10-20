@@ -112,11 +112,9 @@ export function useFetch<ResponseType>(
 			: undefined
 	);
 	useAsyncEffect(async () => {
-		console.log("did consider retry");
 		if (!triggerRetry) {
 			return;
 		}
-		console.log("did not actually retry");
 		if (loadStatus.state === "error") {
 			setLoadStatus({ state: "loading" });
 			await new Promise(r => setTimeout(r, 250)); // make it seem like something is happening when you retry on error (otherwise it might not even be visible)
@@ -124,7 +122,6 @@ export function useFetch<ResponseType>(
 		setLoadStatus({ state: "loading" });
 		let fetched = await perr(fetch(...triggerRetry.params));
 		if (fetched.error) {
-			console.log(fetched.error);
 			return setLoadStatus({
 				state: "error",
 				message: fetched.error.toString()
@@ -174,7 +171,6 @@ export function useFetch<ResponseType>(
 			});
 		}
 	}, [triggerRetry]);
-	console.log("returning loadstatus of ", loadStatus);
 	return [
 		loadStatus,
 		(...params: Parameters<typeof fetch> | []) => {

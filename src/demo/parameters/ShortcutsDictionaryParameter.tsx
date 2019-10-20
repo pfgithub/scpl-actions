@@ -134,7 +134,9 @@ export function ShortcutsDictionaryParameter({
 							</div>
 						</div>
 						<div className="key">
-							<ShortcutsTextRender text={item.key} />
+							<div>
+								<ShortcutsTextRender text={item.key} />
+							</div>
 						</div>
 						<div className="line"></div>
 						<div className="value">

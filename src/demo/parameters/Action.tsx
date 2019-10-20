@@ -159,7 +159,6 @@ export function DefinitelyAction({
 		? !!actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"]
 		: true;
 	let showCode = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowCode"];
-	console.log(actionOutput);
 	return (
 		<>
 			<div
@@ -240,6 +239,7 @@ export function DefinitelyAction({
 								: false;
 							return (
 								<Parameter
+									key={param.Key}
 									paramKey={param.Key}
 									data={param}
 									parameters={actionOutput.WFWorkflowActionParameters!}
