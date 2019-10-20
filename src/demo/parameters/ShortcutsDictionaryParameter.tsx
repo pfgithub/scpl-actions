@@ -19,7 +19,7 @@ import {
 	ShortcutsDictionaryParameterSpec
 } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 
-import { Parameter } from "./Parameter";
+import { ParameterBase } from "./Parameter";
 import { cssdata, ParameterProps } from "../CSSDemo";
 import { Icon, IconButton } from "../Icon";
 
@@ -100,7 +100,7 @@ export function ShortcutsDictionaryParameter({
 				let isDragging = dragging && dragging.uid === item.uid;
 				let isRemoving = removing && removing.uid === item.uid;
 				return [
-					<Parameter
+					<ParameterBase
 						name={"unnamed dictionary"}
 						key={item.uid}
 						visible={visible}
@@ -248,10 +248,10 @@ export function ShortcutsDictionaryParameter({
 						>
 							Delete
 						</button>
-					</Parameter>
+					</ParameterBase>
 				];
 			})}
-			<Parameter
+			<ParameterBase
 				name={"add new field"}
 				className={"addnewfield"}
 				visible={visible}
@@ -280,7 +280,7 @@ export function ShortcutsDictionaryParameter({
 						onClick={() => setRemoving(undefined)}
 					></div>
 				) : null}
-			</Parameter>
+			</ParameterBase>
 		</div>
 	);
 }
