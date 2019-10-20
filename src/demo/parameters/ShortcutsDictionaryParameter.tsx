@@ -133,11 +133,11 @@ export function ShortcutsDictionaryParameter({
 							</div>
 						</div>
 						<div className="key">
-							<div>{item.key}</div>
+							<div>{JSON.stringify(item.key)}</div>
 						</div>
 						<div className="line"></div>
 						<div className="value">
-							<div>{item.value}</div>
+							<div>{JSON.stringify(item.value)}</div>
 						</div>
 						<div
 							className="reorder"
