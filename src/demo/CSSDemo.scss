@@ -112,6 +112,14 @@ $scale: 0.5;
 	font-family: sans-serif;
 	.shortcutnameicon {
 		font-family: WorkflowGlyphs;
+		font-size: $scale * 198px;
+		padding: $scale * 50px;
+		border-radius: $scale * 25px;
+		color: white;
+		display: inline-block;
+		&.c3871DE {
+			background: linear-gradient(to bottom, #737ec4, #6570b9);
+		}
 	}
 	.icon {
 		width: $scale * 40px;
