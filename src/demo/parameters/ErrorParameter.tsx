@@ -11,7 +11,7 @@ export function ErrorParameter({
 	visible
 }: ParameterProps<ShortcutsBaseParameterSpec>) {
 	return (
-		<LabeledParameterBase label={data.Label || "???"} visible={visible}>
+		<LabeledParameterBase label={data.Label || data.Class} visible={visible}>
 			Not Supported // todo json editor
 		</LabeledParameterBase>
 	);

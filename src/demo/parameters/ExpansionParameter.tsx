@@ -13,7 +13,7 @@ export function ExpansionParameter({
 }: ParameterProps<ShortcutsExpandingParameterSpec>) {
 	return (
 		<LabeledParameterBase
-			label={data.Label || "???"}
+			label={data.Label || data.Class}
 			onClick={() => updateParameter(paramKey, !parameters[paramKey])}
 			visible={visible}
 		>

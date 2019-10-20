@@ -11,7 +11,7 @@ export function EnumParameter({
 	visible
 }: ParameterProps<ShortcutsEnumerationParameterSpec>) {
 	return (
-		<LabeledParameterBase label={data.Label || "???"} visible={visible}>
+		<LabeledParameterBase label={data.Label || data.Class} visible={visible}>
 			<SegmentedButton
 				values={data.Items}
 				selected={
