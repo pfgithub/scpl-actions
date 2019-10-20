@@ -269,6 +269,12 @@ $scale: 0.5;
 				&.removing {
 					transform: translate(-200px * $scale, 0);
 				}
+				&.removingnow {
+					transform: scale(1, 0);
+				}
+				&.aboveremovingnow {
+					transform: translate(0, -88px * $scale);
+				}
 				.deletebtn {
 					position: absolute;
 					right: -200px * $scale;

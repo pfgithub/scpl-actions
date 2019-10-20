@@ -73,9 +73,10 @@ export function ShortcutsDictionaryParameter({
 		  }
 		| undefined
 	>(undefined);
-	let [removing, setRemoving] = useState<{ uid: string } | undefined>(
-		undefined
-	);
+	let [removing, setRemoving] = useState<
+		| { uid: string; removing: true | false | "cancel"; index: number }
+		| undefined
+	>(undefined);
 	let topElem = useRef<HTMLDivElement>(null);
 	return (
 		<div className="dictionaryparameter">
@@ -83,6 +84,14 @@ export function ShortcutsDictionaryParameter({
 			{fakeItems.flatMap((item, i) => {
 				let isDragging = dragging && dragging.uid === item.uid;
 				let isRemoving = removing && removing.uid === item.uid;
+				let clearRemoving = async (v: false | "cancel") => {
+					if (!removing) {
+						return;
+					}
+					setRemoving({ ...removing, removing: v });
+					await new Promise(r => setTimeout(r, 100));
+					setRemoving(undefined);
+				};
 				return [
 					<ParameterBase
 						name={"unnamed dictionary"}
@@ -96,7 +105,14 @@ export function ShortcutsDictionaryParameter({
 								: isDragging
 								? "dropping "
 								: "") +
-							(isRemoving ? "removing " : "") +
+							(isRemoving && removing!.removing === true
+								? "removing "
+								: isRemoving && removing!.removing === false
+								? "removingnow"
+								: "") +
+							(removing && !removing.removing && i > removing.index
+								? "aboveremovingnow "
+								: "") +
 							(!dragging && !removing ? "static " : "")
 						}
 						style={
@@ -134,7 +150,9 @@ export function ShortcutsDictionaryParameter({
 							<div>
 								<IconButton
 									icon="remove"
-									onClick={e => setRemoving({ uid: item.uid })}
+									onClick={e =>
+										setRemoving({ uid: item.uid, removing: true, index: i })
+									}
 								/>
 							</div>
 						</div>
@@ -227,13 +245,13 @@ export function ShortcutsDictionaryParameter({
 						{removing ? (
 							<div
 								className="clickawayhandler"
-								onClick={() => setRemoving(undefined)}
+								onClick={() => clearRemoving("cancel")}
 							></div>
 						) : null}
 						<button
 							className={"deletebtn " + (removing ? "deleting" : "")}
-							onClick={() => {
-								setRemoving(undefined);
+							onClick={async () => {
+								await clearRemoving(false);
 								setFakeItems(fakeItems.filter((_, index) => index !== i));
 							}}
 						>
