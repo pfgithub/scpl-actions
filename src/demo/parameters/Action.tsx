@@ -143,7 +143,6 @@ export function DefinitelyAction({
 		parameterSummary.length === 0
 	);
 	if (
-		useShowMoreButton &&
 		actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"] === undefined
 	) {
 		actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"] =
@@ -151,11 +150,19 @@ export function DefinitelyAction({
 				? true
 				: false;
 	}
-	let showMore = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"];
+	let showMore = useShowMoreButton
+		? !!actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"]
+		: true;
+	let showCode = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowCode"];
 	console.log(actionOutput);
 	return (
 		<>
-			<div className="action">
+			<div
+				className={
+					"action " +
+					(actionDetails.ActionClass === "WFCommentAction" ? "comment " : "")
+				}
+			>
 				<ActionTitle
 					icon={actionDetails.IconName || "NoIcon.png"}
 					name={
@@ -164,12 +171,21 @@ export function DefinitelyAction({
 						actionDetails.Name ||
 						"unnamed"
 					}
+					onAboutClick={() => updateParameter("__ScPLShowCode", !showCode)}
 				/>
-				<ActionParameterSummary
-					items={parameterSummary}
-					parameters={actionOutput.WFWorkflowActionParameters!}
-					updateParameter={updateParameter}
-				/>
+				{showCode ? (
+					<textarea
+						className="codedisplay"
+						value={JSON.stringify(actionOutput, null, "\t")}
+					/>
+				) : null}
+				{parameterSummary.length > 0 ? (
+					<ActionParameterSummary
+						items={parameterSummary}
+						parameters={actionOutput.WFWorkflowActionParameters!}
+						updateParameter={updateParameter}
+					/>
+				) : null}
 				{remainingParameters.length > 0 ? (
 					<>
 						{useShowMoreButton ? (
@@ -228,10 +244,12 @@ export function DefinitelyAction({
 
 export function ActionTitle({
 	icon,
-	name
+	name,
+	onAboutClick
 }: {
 	icon: IconString;
 	name: string;
+	onAboutClick: () => void;
 }) {
 	return (
 		<h3 className="title">
@@ -239,7 +257,10 @@ export function ActionTitle({
 			<div className="titletext">
 				<div>{name}</div>
 			</div>
-			<IconButton icon="delete" />
+			<div className="actionicons">
+				<IconButton icon="expandclosed" onClick={onAboutClick} />
+				<IconButton icon="delete" />
+			</div>
 		</h3>
 	);
 }
