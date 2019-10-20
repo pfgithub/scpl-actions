@@ -167,9 +167,10 @@ export function DefinitelyAction({
 					icon={actionDetails.IconName || "NoIcon.png"}
 					name={
 						actionDetails.Attribution ||
-						actionDetails.Category ||
-						actionDetails.Name ||
-						"unnamed"
+						(parameterSummary.length === 0
+							? actionDetails.Name
+							: actionDetails.Category) ||
+						"could not determine name"
 					}
 					onAboutClick={() => updateParameter("__ScPLShowCode", !showCode)}
 				/>
