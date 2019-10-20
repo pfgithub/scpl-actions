@@ -179,6 +179,12 @@ export function DefinitelyAction({
 						"could not determine name"
 					}
 					onAboutClick={() => updateParameter("__ScPLShowCode", !showCode)}
+					onCollapseClick={() =>
+						updateParameter(
+							"__ScPLIndentCollapsed",
+							!actionOutput.WFWorkflowActionParameters!.__ScPLIndentCollapsed
+						)
+					}
 				/>
 				{showCode ? (
 					<textarea
@@ -252,11 +258,13 @@ export function DefinitelyAction({
 export function ActionTitle({
 	icon,
 	name,
-	onAboutClick
+	onAboutClick,
+	onCollapseClick
 }: {
 	icon: IconString;
 	name: string;
 	onAboutClick: () => void;
+	onCollapseClick: () => void;
 }) {
 	return (
 		<h3 className="title">
@@ -266,6 +274,7 @@ export function ActionTitle({
 			</div>
 			<div className="actionicons">
 				<IconButton icon="expandclosed" onClick={onAboutClick} />
+				<IconButton icon="expandopen" onClick={onCollapseClick} />
 				<IconButton icon="delete" />
 			</div>
 		</h3>

@@ -113,6 +113,7 @@ export function ShortcutViewerEditor({
 			.toUpperCase();
 
 	let indentLevel = 0;
+	let indentIsCollapsed: boolean[] = [];
 	// TODO allow collapsing indents
 
 	return (
@@ -130,20 +131,36 @@ export function ShortcutViewerEditor({
 					let controlFlowMode = action.WFWorkflowActionParameters!
 						.WFControlFlowMode;
 					let thisIndentLevel = indentLevel;
-					if (controlFlowMode === undefined) {
-					} else if (controlFlowMode === 0) {
-						indentLevel++;
-					} else if (controlFlowMode === 1) {
-						thisIndentLevel--;
-					} else if (controlFlowMode === 2) {
-						indentLevel--;
-						thisIndentLevel = indentLevel;
+					let thisIsCollapsed = indentIsCollapsed[0];
+					if (controlFlowMode !== undefined) {
+						if (controlFlowMode === 0) {
+							indentLevel++;
+							indentIsCollapsed.unshift(
+								thisIsCollapsed ||
+									!!action.WFWorkflowActionParameters!.__ScPLIndentCollapsed
+							);
+						} else if (controlFlowMode === 1) {
+							thisIndentLevel--;
+							indentIsCollapsed.shift();
+							thisIsCollapsed = indentIsCollapsed[0];
+							indentIsCollapsed.unshift(
+								thisIsCollapsed ||
+									!!action.WFWorkflowActionParameters!.__ScPLIndentCollapsed
+							);
+						} else if (controlFlowMode === 2) {
+							indentLevel--;
+							thisIndentLevel = indentLevel;
+							indentIsCollapsed.shift();
+							thisIsCollapsed = indentIsCollapsed[0];
+						}
+					}
+					if (thisIsCollapsed) {
+						return null;
 					}
 					return (
-						<>
+						<React.Fragment key={"" + key}>
 							<div className="connector space" />
 							<ErrorBoundary
-								key={"" + key}
 								error={e => (
 									<div className="action">
 										<pre className="error">
@@ -171,7 +188,7 @@ export function ShortcutViewerEditor({
 									indentLevel={thisIndentLevel}
 								/>
 							</ErrorBoundary>
-						</>
+						</React.Fragment>
 					);
 				})}
 				<div className="connector space" />
