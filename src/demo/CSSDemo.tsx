@@ -31,6 +31,7 @@ import { Icon, IconButton, IconString } from "./Icon";
 
 import { Parameter } from "./parameters/Parameter";
 import { ShortcutsDictionaryParameter } from "./parameters/ShortcutsDictionaryParameter";
+import { TextWithVariables } from "./TextWithVariables";
 
 export let cssdata: { scale: string } = cssexported;
 
@@ -65,7 +66,7 @@ export class ErrorBoundary extends React.Component<
 
 export default function CSSDemo(props: {}): JSX.Element {
 	let [actionOutput, setActionOutput] = useState<WFAction>({
-		WFWorkflowActionIdentifier: "is.workflow.actions.runjavascriptonwebpage",
+		WFWorkflowActionIdentifier: "is.workflow.actions.downloadurl",
 		WFWorkflowActionParameters: {}
 	});
 	let [actionJSON, setActionJSON] = useState("");
@@ -75,6 +76,7 @@ export default function CSSDemo(props: {}): JSX.Element {
 	let [key, setKey] = useState(0);
 	return (
 		<div className="cssdemo">
+			<TextWithVariables />
 			<button onClick={() => setKey(key + 1)}>Refresh</button>
 			<div className="connector space" />
 			{[
