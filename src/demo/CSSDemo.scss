@@ -421,6 +421,9 @@ $scale: 0.5;
 				padding-right: $scale * 14px;
 				line-height: $scale * 53px;
 				font: inherit;
+				.placeholder {
+					color: rgba(0, 122, 255, 0.5);
+				}
 			}
 		}
 	}
