@@ -4,9 +4,10 @@ import { ShortcutsActionSpec } from "scpl/built/src/Data/ActionDataTypes/Shortcu
 import { ShortcutsParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { ShortcutsParameterRelationResourceRelationSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsResourceSpec";
 import { WFAction, WFParameter } from "scpl/built/src/OutputData";
-import { Icon, IconButton, IconString } from "../Icon";
+import { Icon, IconButton, IconString, ActionIcon } from "../Icon";
 import { ActionFullWidthShowMoreParameter, Parameter } from "./Parameter";
 import { ActionParameterSummary } from "./Summary";
+import { BuiltinIcon } from "../icons";
 
 export type UpdateParametersCallback = (
 	key: string,
@@ -261,14 +262,14 @@ export function ActionTitle({
 	onAboutClick,
 	onCollapseClick
 }: {
-	icon: IconString;
+	icon: BuiltinIcon;
 	name: string;
 	onAboutClick: () => void;
 	onCollapseClick: () => void;
 }) {
 	return (
 		<h3 className="title">
-			<Icon icon={icon} />
+			<ActionIcon icon={icon} />
 			<div className="titletext">
 				<div>{name}</div>
 			</div>

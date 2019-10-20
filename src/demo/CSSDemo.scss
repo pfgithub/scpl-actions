@@ -131,9 +131,6 @@ $scale: 0.5;
 		background-size: contain;
 		background-repeat: no-repeat;
 		transition: 0.1s transform ease-in-out;
-		&.download {
-			background-image: url(https://i.imgur.com/8zdJsL3.png);
-		}
 		&.delete {
 			background-image: url(https://i.imgur.com/08e6nna.png);
 		}

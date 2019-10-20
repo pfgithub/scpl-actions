@@ -15,6 +15,7 @@ import {
 } from "scpl/built/src/OutputData";
 import { ShortcutsParameterSpec } from "scpl/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { ShortcutsActionIconName } from "scpl/built/src/Data/ActionDataTypes/Strings/ShortcutsActionIconName";
+import { BuiltinIcon, BuiltinIconValueMap } from "./icons";
 
 export type IconString =
 	| "download"
@@ -36,6 +37,16 @@ export function Icon({ icon }: { icon: IconString }) {
 		icon = icon.toLowerCase().replace(/\.png$/, "") as IconString;
 	}
 	return <div className={"icon " + icon} aria-label={icon + " icon"}></div>;
+}
+
+export function ActionIcon({ icon }: { icon: BuiltinIcon }) {
+	return (
+		<div
+			className={"icon actionicon"}
+			style={{ backgroundImage: `url(${BuiltinIconValueMap[icon]})` }}
+			aria-label={icon + " icon"}
+		></div>
+	);
 }
 
 export function IconButton(

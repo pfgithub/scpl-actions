@@ -67,11 +67,13 @@ export function ShortcutsMultilineTextInputParameter({
 				spellCheck={false}
 				autoCorrect={undefined}
 				onChange={e => updateParameter(paramKey, e.currentTarget.value)}
-				onScroll={
-					e =>
-						(preRef.current!.style.transform = `translate(0, ${-e.currentTarget
-							.scrollTop}px)`) // unfortunately, .scrollTop disables overscroll on iOS safari (but not mac safari)
-				}
+				onScroll={e => {
+					if (!preRef.current) {
+						return;
+					}
+					preRef.current.style.transform = `translate(0, ${-e.currentTarget
+						.scrollTop}px)`; // unfortunately, .scrollTop disables overscroll on iOS safari (but not mac safari)}
+				}}
 			></textarea>
 		</ParameterBase>
 	);
