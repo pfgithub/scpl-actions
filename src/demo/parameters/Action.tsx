@@ -131,11 +131,13 @@ export function DefinitelyAction({
 			}),
 		[actionOutput, setActionOutput]
 	);
-	let remainingParameters = actionDetails.Parameters!.filter(param =>
-		parameterSummary.every(item =>
-			typeof item === "string" ? true : param.Key !== item.details.Key
-		)
-	);
+	let remainingParameters = actionDetails.Parameters
+		? actionDetails.Parameters!.filter(param =>
+				parameterSummary.every(item =>
+					typeof item === "string" ? true : param.Key !== item.details.Key
+				)
+		  )
+		: [];
 	let showMore = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"];
 	console.log(actionOutput);
 	return (
