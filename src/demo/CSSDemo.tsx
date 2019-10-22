@@ -7,6 +7,7 @@ import uuidv4 from "uuid/v4";
 import * as cssexported from "./CSSDemo.scss";
 import { Action, UpdateParametersCallback } from "./parameters/Action";
 import { useFetch } from "./useFetch";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 //@ts-ignore
 bplistparser.maxObjectCount = 9999999;
@@ -50,10 +51,15 @@ export default function Loader(props: {}) {
 		{ start: "later", get: "arraybuffer" },
 		fileUrlToLoad || "none"
 	);
+	let [showFinal, setShowFinal] = useState(false);
 	if (loadStatus.state === "none") {
 		return <button onClick={() => startLoad()}>Load</button>;
 	}
 	if (loadStatus.state === "loaded") {
+		if(!showFinal){
+			setTimeout(() => setShowFinal(true), 0);
+			return <div>Rendering...<LoadingSpinner /></div>
+		}
 		let parsedBuffer = bplistparser.parseBuffer<WFShortcut>(
 			new Buffer(loadStatus.response)
 		);
@@ -68,11 +74,14 @@ export default function Loader(props: {}) {
 		);
 	}
 	return (
+		<div>
 		<pre>
 			{fileUrlToLoad}
 			{"\n\n"}
 			{JSON.stringify(loadStatus, null, "\t")}
 		</pre>
+		<LoadingSpinner />
+		</div>
 	);
 	// return <input value={fileUrlToLoad || "none"} />;
 }
