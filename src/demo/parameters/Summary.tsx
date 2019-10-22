@@ -10,6 +10,7 @@ import {
 } from "shortcuts3types/built/src/OutputData";
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 import { ShortcutsTextRender } from "./ShortcutsTextRender";
+import { ShortcutsSerializationTypeRender } from "./ShortcutsSerializationTypeRender";
 
 export function ParameterSummaryItemComponent({
 	item,
@@ -113,7 +114,7 @@ export function SummaryTextInput({
 				className="input"
 				onClick={e => setEditingValue(makeEditingValue(value))}
 			>
-				<ShortcutsTextRender text={value}></ShortcutsTextRender>
+				<ShortcutsSerializationTypeRender value={value} />
 			</span> // !!!!accessability
 		);
 	}

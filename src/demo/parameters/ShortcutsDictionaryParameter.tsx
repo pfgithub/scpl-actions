@@ -9,6 +9,7 @@ import { Icon, IconButton } from "../Icon";
 import { startDragWatcher } from "../util";
 import { ParameterBase } from "./Parameter";
 import { ShortcutsTextRender } from "./ShortcutsTextRender";
+import { ShortcutsSerializationTypeRender } from "./ShortcutsSerializationTypeRender";
 
 type DictionaryParameterValueType =
 	| {
@@ -151,12 +152,20 @@ export function ShortcutsDictionaryParameter({
 						</div>
 						<div className="key">
 							<div>
-								<ShortcutsTextRender text={item.key} />
+								<ShortcutsSerializationTypeRender value={item.key} />
 							</div>
 						</div>
 						<div className="line"></div>
 						<div className="value">
-							<div>{JSON.stringify(item.value)}</div>
+							<div>
+								{Array.isArray(item.value) ? (
+									<span className="fakeclickable">
+										{item.value.length} items
+									</span>
+								) : (
+									<ShortcutsSerializationTypeRender value={item.value} />
+								)}
+							</div>
 						</div>
 						<div
 							className="reorder"
