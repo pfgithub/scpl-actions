@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { ShortcutsParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { ParameterProps } from "../CSSDemo";
+import { ParameterProps, ErrorBoundary } from "../CSSDemo";
 import { ActionFullWidthShowMoreParameter } from "./ActionFullWidthShowMoreParameter";
 import { EnumParameter } from "./EnumParameter";
 import { ErrorParameter } from "./ErrorParameter";
@@ -16,12 +16,23 @@ export {
 	ShortcutsMultilineTextInputParameter
 };
 
-export function Parameter({
+export function Parameter(p: ParameterProps<ShortcutsParameterSpec>) {
+	return (
+		<ErrorBoundary
+			error={e => <ErrorParameter {...p} error={e.toString()}></ErrorParameter>}
+		>
+			<RealParameter {...p}></RealParameter>
+		</ErrorBoundary>
+	);
+}
+
+export function RealParameter({
 	paramKey,
 	data,
 	parameters,
 	updateParameter,
-	visible
+	visible,
+	shortcut
 }: ParameterProps<ShortcutsParameterSpec>) {
 	if (data.Class === "WFEnumerationParameter") {
 		return (
@@ -31,6 +42,7 @@ export function Parameter({
 				parameters={parameters}
 				updateParameter={updateParameter}
 				visible={visible}
+				shortcut={shortcut}
 			/>
 		);
 	} else if (data.Class === "WFExpandingParameter") {
@@ -41,6 +53,7 @@ export function Parameter({
 				parameters={parameters}
 				updateParameter={updateParameter}
 				visible={visible}
+				shortcut={shortcut}
 			/>
 		);
 	} else if (data.Class === "WFDictionaryParameter") {
@@ -51,6 +64,7 @@ export function Parameter({
 				parameters={parameters}
 				updateParameter={updateParameter}
 				visible={visible}
+				shortcut={shortcut}
 			/>
 		);
 	} else if (data.Class === "WFTextInputParameter" && data.Multiline) {
@@ -61,6 +75,7 @@ export function Parameter({
 				parameters={parameters}
 				updateParameter={updateParameter}
 				visible={visible}
+				shortcut={shortcut}
 			/>
 		);
 	} else {
@@ -71,6 +86,7 @@ export function Parameter({
 				parameters={parameters}
 				updateParameter={updateParameter}
 				visible={visible}
+				shortcut={shortcut}
 			/>
 		);
 	}

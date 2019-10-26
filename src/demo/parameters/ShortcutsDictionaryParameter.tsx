@@ -43,7 +43,8 @@ export function ShortcutsDictionaryParameter({
 	data,
 	parameters,
 	updateParameter,
-	visible
+	visible,
+	shortcut
 }: ParameterProps<ShortcutsDictionaryParameterSpec>) {
 	let paramValue = parameters[paramKey] as WFDictionaryParameter;
 	let [fakeItems, setFakeItems] = useState<DictionaryParameterValueType[]>(
@@ -152,7 +153,10 @@ export function ShortcutsDictionaryParameter({
 						</div>
 						<div className="key">
 							<div>
-								<ShortcutsSerializationTypeRender value={item.key} />
+								<ShortcutsSerializationTypeRender
+									shortcut={shortcut}
+									value={item.key}
+								/>
 							</div>
 						</div>
 						<div className="line"></div>
@@ -163,7 +167,10 @@ export function ShortcutsDictionaryParameter({
 										{item.value.length} items
 									</span>
 								) : (
-									<ShortcutsSerializationTypeRender value={item.value} />
+									<ShortcutsSerializationTypeRender
+										shortcut={shortcut}
+										value={item.value}
+									/>
 								)}
 							</div>
 						</div>

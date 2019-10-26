@@ -1,13 +1,19 @@
 import * as bplistparser from "bplist-parser";
 import React, { useEffect, useMemo, useState } from "react";
 import { ShortcutsBaseParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { WFAction, WFParameters, WFShortcut } from "shortcuts3types/built/src/OutputData";
+import {
+	WFAction,
+	WFParameters,
+	WFShortcut
+} from "shortcuts3types/built/src/OutputData";
 import uuidv4 from "uuid/v4";
 //@ts-ignore
 import * as cssexported from "./CSSDemo.scss";
 import { Action, UpdateParametersCallback } from "./parameters/Action";
 import { useFetch } from "./useFetch";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { ShortcutData } from "./parameters/ShortcutData";
+import { getActionFromID } from "shortcuts3types";
 
 //@ts-ignore
 bplistparser.maxObjectCount = 9999999;
@@ -56,9 +62,14 @@ export default function Loader(props: {}) {
 		return <button onClick={() => startLoad()}>Load</button>;
 	}
 	if (loadStatus.state === "loaded") {
-		if(!showFinal){
+		if (!showFinal) {
 			setTimeout(() => setShowFinal(true), 0);
-			return <div>Rendering...<LoadingSpinner /></div>
+			return (
+				<div>
+					Rendering...
+					<LoadingSpinner />
+				</div>
+			);
 		}
 		let parsedBuffer = bplistparser.parseBuffer<WFShortcut>(
 			new Buffer(loadStatus.response)
@@ -75,12 +86,12 @@ export default function Loader(props: {}) {
 	}
 	return (
 		<div>
-		<pre>
-			{fileUrlToLoad}
-			{"\n\n"}
-			{JSON.stringify(loadStatus, null, "\t")}
-		</pre>
-		<LoadingSpinner />
+			<pre>
+				{fileUrlToLoad}
+				{"\n\n"}
+				{JSON.stringify(loadStatus, null, "\t")}
+			</pre>
+			<LoadingSpinner />
 		</div>
 	);
 	// return <input value={fileUrlToLoad || "none"} />;
@@ -104,6 +115,7 @@ export function ShortcutViewerEditor({
 				if (typeof action.WFWorkflowActionParameters.UUID !== "string") {
 					action.WFWorkflowActionParameters.UUID = uuidv4();
 				}
+				action.WFWorkflowActionParameters.UUID = action.WFWorkflowActionParameters.UUID.toLowerCase();
 			});
 			return shortcut;
 		}, [shortcut])
@@ -125,6 +137,18 @@ export function ShortcutViewerEditor({
 	let indentIsCollapsed: boolean[] = [];
 	// TODO allow collapsing indents
 
+	let shortcutData: ShortcutData = new ShortcutData();
+
+	editedShortcut[0].WFWorkflowActions.map((action, i) => {
+		let uid = action.WFWorkflowActionParameters!.UUID as string;
+		let _tempAction = getActionFromID(action.WFWorkflowActionIdentifier);
+		shortcutData.setActionForUUID(uid, {
+			data: action,
+			spec: _tempAction ? _tempAction._data : undefined,
+			jumpTo: () => alert("Not Initialized")
+		}); // TODO maybe set index to show if a variable exists or is broken?
+	});
+
 	return (
 		<div>
 			<div className="cssdemo">
@@ -137,6 +161,7 @@ export function ShortcutViewerEditor({
 				</div>
 				{editedShortcut[0].WFWorkflowActions.map((action, i) => {
 					let key = action.WFWorkflowActionParameters!.UUID;
+
 					let controlFlowMode = action.WFWorkflowActionParameters!
 						.WFControlFlowMode;
 					let thisIndentLevel = indentLevel;
@@ -195,6 +220,7 @@ export function ShortcutViewerEditor({
 										]);
 									}}
 									indentLevel={thisIndentLevel}
+									shortcut={shortcutData}
 								/>
 							</ErrorBoundary>
 						</React.Fragment>
@@ -223,6 +249,7 @@ export type ParameterProps<T extends ShortcutsBaseParameterSpec> = {
 	parameters: WFParameters;
 	updateParameter: UpdateParametersCallback;
 	visible: boolean;
+	shortcut: ShortcutData;
 };
 
 type _pc<N extends string> = {

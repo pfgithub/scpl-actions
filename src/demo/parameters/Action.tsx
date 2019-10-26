@@ -1,13 +1,19 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { getActionFromID } from "shortcuts3types/built/src/ActionData";
 import { ShortcutsActionSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsActionSpec";
 import { ShortcutsParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { ShortcutsParameterRelationResourceRelationSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsResourceSpec";
 import { WFAction, WFParameter } from "shortcuts3types/built/src/OutputData";
 import { Icon, IconButton, IconString, ActionIcon } from "../Icon";
-import { ActionFullWidthShowMoreParameter, Parameter } from "./Parameter";
+import {
+	ActionFullWidthShowMoreParameter,
+	Parameter,
+	ErrorParameter
+} from "./Parameter";
 import { ActionParameterSummary } from "./Summary";
 import { BuiltinIcon } from "../icons";
+import { ShortcutData } from "./ShortcutData";
+import { ErrorBoundary } from "../CSSDemo";
 
 export type UpdateParametersCallback = (
 	key: string,
@@ -21,11 +27,13 @@ export type ParameterSummaryItem =
 export function Action({
 	actionOutput,
 	setActionOutput,
-	indentLevel
+	indentLevel,
+	shortcut
 }: {
 	actionOutput: WFAction;
 	setActionOutput: (val: WFAction) => void;
 	indentLevel: number;
+	shortcut: ShortcutData;
 }): JSX.Element {
 	let identifier = actionOutput.WFWorkflowActionIdentifier;
 	let _tempAction = getActionFromID(identifier);
@@ -38,6 +46,7 @@ export function Action({
 			setActionOutput={setActionOutput}
 			actionDetails={_tempAction._data}
 			indentLevel={indentLevel}
+			shortcut={shortcut}
 		/>
 	);
 }
@@ -98,12 +107,14 @@ export function DefinitelyAction({
 	actionOutput,
 	setActionOutput,
 	actionDetails,
-	indentLevel
+	indentLevel,
+	shortcut
 }: {
 	actionOutput: WFAction;
 	setActionOutput: (val: WFAction) => void;
 	actionDetails: ShortcutsActionSpec;
 	indentLevel: number;
+	shortcut: ShortcutData;
 }): JSX.Element {
 	let parameterSummary = useMemo<ParameterSummaryItem[]>(
 		() =>
@@ -159,10 +170,22 @@ export function DefinitelyAction({
 	let showMore = useShowMoreButton
 		? !!actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"]
 		: true;
+	let selfRef = useRef<HTMLDivElement>(null);
+	if (selfRef.current) {
+		shortcut.updateActionForUUID(
+			actionOutput.WFWorkflowActionParameters!.UUID as string,
+			{
+				jumpTo: () => {
+					selfRef.current!.scrollIntoView({ behavior: "smooth" });
+				}
+			}
+		);
+	}
 	let showCode = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowCode"];
 	return (
 		<>
 			<div
+				ref={selfRef}
 				className={
 					"action " +
 					((actionDetails.ActionClass === "WFCommentAction" ? "comment " : "") +
@@ -195,6 +218,7 @@ export function DefinitelyAction({
 				{parameterSummary.length > 0 ? (
 					<ActionParameterSummary
 						items={parameterSummary}
+						shortcut={shortcut}
 						parameters={actionOutput.WFWorkflowActionParameters!}
 						updateParameter={updateParameter}
 					/>
@@ -246,6 +270,7 @@ export function DefinitelyAction({
 									parameters={actionOutput.WFWorkflowActionParameters!}
 									updateParameter={updateParameter}
 									visible={show}
+									shortcut={shortcut}
 								/>
 							);
 						})}

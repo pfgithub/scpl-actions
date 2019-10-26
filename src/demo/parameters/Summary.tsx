@@ -11,13 +11,16 @@ import {
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 import { ShortcutsTextRender } from "./ShortcutsTextRender";
 import { ShortcutsSerializationTypeRender } from "./ShortcutsSerializationTypeRender";
+import { ShortcutData } from "./ShortcutData";
 
 export function ParameterSummaryItemComponent({
 	item,
+	shortcut,
 	parameters,
 	updateParameter
 }: {
 	item: ParameterSummaryItem;
+	shortcut: ShortcutData;
 	parameters: WFParameters;
 	updateParameter: UpdateParametersCallback;
 }) {
@@ -31,6 +34,7 @@ export function ParameterSummaryItemComponent({
 				data={item.details}
 				value={(item.value || "") as WFTextParameter}
 				onChange={v => updateParameter(item.details.Key, v)}
+				shortcut={shortcut}
 			/>
 		);
 	}
@@ -52,10 +56,12 @@ export function ParameterSummaryItemComponent({
 
 export function ActionParameterSummary({
 	items,
+	shortcut,
 	parameters,
 	updateParameter
 }: {
 	items: ParameterSummaryItem[];
+	shortcut: ShortcutData;
 	parameters: WFParameters;
 	updateParameter: UpdateParametersCallback;
 }) {
@@ -67,6 +73,7 @@ export function ActionParameterSummary({
 					<ParameterSummaryItemComponent
 						key={i}
 						item={v}
+						shortcut={shortcut}
 						parameters={parameters}
 						updateParameter={updateParameter}
 					/>
@@ -81,13 +88,15 @@ export function ActionParameterSummary({
 // REMINDER REMINDER REMINDER REMINDER REMINDER REMINDER
 
 export function SummaryTextInput({
+	data,
 	value,
 	onChange,
-	data
+	shortcut
 }: {
-	value: WFTextParameter;
 	data: ShortcutsTextInputParameterSpec;
+	value: WFTextParameter;
 	onChange: (v: WFTextParameter) => void;
+	shortcut: ShortcutData;
 }) {
 	// let [editing, setEditing] = useState(false);
 	let [editingValue, setEditingValue] = useState<string | undefined>(undefined);
@@ -114,7 +123,7 @@ export function SummaryTextInput({
 				className="input"
 				onClick={e => setEditingValue(makeEditingValue(value))}
 			>
-				<ShortcutsSerializationTypeRender value={value} />
+				<ShortcutsSerializationTypeRender shortcut={shortcut} value={value} />
 			</span> // !!!!accessability
 		);
 	}

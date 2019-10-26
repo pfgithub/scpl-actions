@@ -2,26 +2,35 @@ import React, { useRef, useState } from "react";
 import { ShortcutsEnumerationParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { ParameterProps } from "../CSSDemo";
 import { LabeledParameterBase } from "./Parameter";
+import { ShortcutsSerializationTypeRender } from "./ShortcutsSerializationTypeRender";
 
 export function EnumParameter({
 	paramKey,
 	data,
 	parameters,
 	updateParameter,
-	visible
+	visible,
+	shortcut
 }: ParameterProps<ShortcutsEnumerationParameterSpec>) {
 	return (
 		<LabeledParameterBase label={data.Label || data.Class} visible={visible}>
-			<SegmentedButton
-				values={data.Items}
-				selected={
-					(parameters[paramKey] as string) ||
-					// !!!!!!!!!!!might be variable
-					data.DefaultValue ||
-					"this should never happen"
-				}
-				onChange={ns => updateParameter(paramKey, ns)}
-			/>
+			{typeof parameters[paramKey] === "string" ? (
+				<SegmentedButton
+					values={data.Items}
+					selected={
+						(parameters[paramKey] as string) ||
+						// !!!!!!!!!!!might be variable
+						data.DefaultValue ||
+						"this should never happen"
+					}
+					onChange={ns => updateParameter(paramKey, ns)}
+				/>
+			) : (
+				<ShortcutsSerializationTypeRender
+					value={parameters[paramKey]}
+					shortcut={shortcut}
+				/>
+			)}
 		</LabeledParameterBase>
 	);
 }

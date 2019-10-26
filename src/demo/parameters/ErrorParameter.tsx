@@ -8,11 +8,14 @@ export function ErrorParameter({
 	data,
 	parameters,
 	updateParameter,
-	visible
-}: ParameterProps<ShortcutsBaseParameterSpec>) {
+	visible,
+	error
+}: ParameterProps<ShortcutsBaseParameterSpec> & { error?: string }) {
 	return (
 		<LabeledParameterBase label={data.Label || data.Class} visible={visible}>
-			Not Supported // todo json editor
+			<span className="error">
+				{error ? error : "not sure how to display parameter " + data.Class}
+			</span>
 		</LabeledParameterBase>
 	);
 }

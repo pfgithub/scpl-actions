@@ -8,8 +8,15 @@ import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 import { ShortcutsAttachmentRender } from "./ShortcutsAttachmentRender";
 
 import "./ShortcutsTextRender.scss";
+import { ShortcutData } from "./ShortcutData";
 
-export function ShortcutsTextRender({ text }: { text: WFTextParameter }) {
+export function ShortcutsTextRender({
+	shortcut,
+	text
+}: {
+	shortcut: ShortcutData;
+	text: WFTextParameter;
+}) {
 	if (typeof text === "string") {
 		return <span className="WFTextTokenString">{text}</span>;
 	}
@@ -28,7 +35,10 @@ export function ShortcutsTextRender({ text }: { text: WFTextParameter }) {
 					return (
 						<>
 							{part}
-							<ShortcutsAttachmentRender attachment={attachment} />
+							<ShortcutsAttachmentRender
+								shortcut={shortcut}
+								attachment={attachment}
+							/>
 						</>
 					);
 				}
