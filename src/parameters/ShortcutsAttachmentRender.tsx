@@ -5,7 +5,7 @@ import {
 	WFTextParameter,
 	WFAttachmentData,
 	WFVariableAttachmentData,
-	WFMagicVariableAttachmentData
+	WFMagicVariableAttachmentData,
 } from "shortcuts3types/built/src/OutputData";
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 import { BuiltinIcon } from "../icons";
@@ -14,7 +14,7 @@ import { ShortcutData } from "./ShortcutData";
 
 export function ShortcutsAttachmentRender({
 	shortcut,
-	attachment
+	attachment,
 }: {
 	shortcut: ShortcutData;
 	attachment: WFAttachmentData;

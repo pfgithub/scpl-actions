@@ -9,7 +9,7 @@ export function ErrorParameter({
 	parameters,
 	updateParameter,
 	visible,
-	error
+	error,
 }: ParameterProps<ShortcutsBaseParameterSpec> & { error?: string }) {
 	return (
 		<LabeledParameterBase label={data.Label || data.Class} visible={visible}>

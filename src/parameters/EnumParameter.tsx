@@ -10,7 +10,7 @@ export function EnumParameter({
 	parameters,
 	updateParameter,
 	visible,
-	shortcut
+	shortcut,
 }: ParameterProps<ShortcutsEnumerationParameterSpec>) {
 	return (
 		<LabeledParameterBase label={data.Label || data.Class} visible={visible}>
@@ -38,7 +38,7 @@ export function EnumParameter({
 export function SegmentedButton({
 	values,
 	selected,
-	onChange
+	onChange,
 }: {
 	values: string[];
 	selected: string;

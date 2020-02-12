@@ -3,7 +3,7 @@ import { ShortcutsTextInputParameterSpec } from "shortcuts3types/built/src/Data/
 import {
 	WFParameters,
 	WFTextParameter,
-	WFParameter
+	WFParameter,
 } from "shortcuts3types/built/src/OutputData";
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 import { ShortcutsAttachmentRender } from "./ShortcutsAttachmentRender";
@@ -13,7 +13,7 @@ import { ShortcutsTextRender } from "./ShortcutsTextRender";
 import { ShortcutData } from "./ShortcutData";
 
 export function ShortcutsErrorRender({
-	value
+	value,
 }: {
 	shortcut: ShortcutData;
 	value: WFParameter;
@@ -27,7 +27,7 @@ export function ShortcutsErrorRender({
 
 export function ShortcutsSerializationTypeRender({
 	value,
-	shortcut
+	shortcut,
 }: {
 	value: WFParameter;
 	shortcut: ShortcutData;

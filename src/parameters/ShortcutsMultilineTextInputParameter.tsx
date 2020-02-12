@@ -10,7 +10,7 @@ export function ShortcutsMultilineTextInputParameter({
 	data,
 	parameters,
 	updateParameter,
-	visible
+	visible,
 }: ParameterProps<ShortcutsTextInputParameterSpec>) {
 	/*
     {

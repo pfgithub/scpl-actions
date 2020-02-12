@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
 	ShortcutsTextInputParameterSpec,
-	ShortcutsStepperParameterSpec
+	ShortcutsStepperParameterSpec,
 } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import {
 	WFParameters,
 	WFTextParameter,
-	WFAttachmentParameter
+	WFAttachmentParameter,
 } from "shortcuts3types/built/src/OutputData";
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 import { ShortcutsTextRender } from "./ShortcutsTextRender";
@@ -17,7 +17,7 @@ export function ParameterSummaryItemComponent({
 	item,
 	shortcut,
 	parameters,
-	updateParameter
+	updateParameter,
 }: {
 	item: ParameterSummaryItem;
 	shortcut: ShortcutData;
@@ -58,7 +58,7 @@ export function ActionParameterSummary({
 	items,
 	shortcut,
 	parameters,
-	updateParameter
+	updateParameter,
 }: {
 	items: ParameterSummaryItem[];
 	shortcut: ShortcutData;
@@ -91,7 +91,7 @@ export function SummaryTextInput({
 	data,
 	value,
 	onChange,
-	shortcut
+	shortcut,
 }: {
 	data: ShortcutsTextInputParameterSpec;
 	value: WFTextParameter;
@@ -145,7 +145,7 @@ export function SummaryTextInput({
 export function SummaryStepperParameter({
 	value,
 	onChange,
-	data
+	data,
 }: {
 	value: number | WFAttachmentParameter;
 	data: ShortcutsStepperParameterSpec;

@@ -13,7 +13,7 @@ export {
 	ExpansionParameter,
 	ErrorParameter,
 	ActionFullWidthShowMoreParameter,
-	ShortcutsMultilineTextInputParameter
+	ShortcutsMultilineTextInputParameter,
 };
 
 export function Parameter(p: ParameterProps<ShortcutsParameterSpec>) {
@@ -32,7 +32,7 @@ export function RealParameter({
 	parameters,
 	updateParameter,
 	visible,
-	shortcut
+	shortcut,
 }: ParameterProps<ShortcutsParameterSpec>) {
 	if (data.Class === "WFEnumerationParameter") {
 		return (
@@ -156,7 +156,7 @@ export function LabeledParameterBase({
 	children,
 	className,
 	onClick,
-	visible
+	visible,
 }: {
 	className?: string;
 	label: string;

@@ -8,7 +8,7 @@ import { Icon, IconButton, IconString, ActionIcon } from "../Icon";
 import {
 	ActionFullWidthShowMoreParameter,
 	Parameter,
-	ErrorParameter
+	ErrorParameter,
 } from "./Parameter";
 import { ActionParameterSummary } from "./Summary";
 import { BuiltinIcon } from "../icons";
@@ -17,7 +17,7 @@ import { ErrorBoundary } from "../ShortcutViewer";
 
 export type UpdateParametersCallback = (
 	key: string,
-	newParameter: WFParameter
+	newParameter: WFParameter,
 ) => void;
 
 export type ParameterSummaryItem =
@@ -28,7 +28,7 @@ export function Action({
 	actionOutput,
 	setActionOutput,
 	indentLevel,
-	shortcut
+	shortcut,
 }: {
 	actionOutput: WFAction;
 	setActionOutput: (val: WFAction) => void;
@@ -54,7 +54,7 @@ export function Action({
 function relationResourceCompare(
 	currentValue: any,
 	relation: ShortcutsParameterRelationResourceRelationSpec | "??",
-	argValues: any[]
+	argValues: any[],
 ) {
 	const argValue = argValues[0];
 	const currentValueNum = +currentValue;
@@ -63,7 +63,7 @@ function relationResourceCompare(
 		case "==":
 			return argValues.some(
 				(val: string | number | boolean | object | undefined) =>
-					val === currentValue
+					val === currentValue,
 			);
 		case "!=":
 			if (
@@ -98,7 +98,7 @@ function relationResourceCompare(
 			return currentValue !== undefined;
 		default:
 			throw new Error(
-				`RelationResource relation type ${relation} is not implemented.`
+				`RelationResource relation type ${relation} is not implemented.`,
 			);
 	}
 }
@@ -108,7 +108,7 @@ export function DefinitelyAction({
 	setActionOutput,
 	actionDetails,
 	indentLevel,
-	shortcut
+	shortcut,
 }: {
 	actionOutput: WFAction;
 	setActionOutput: (val: WFAction) => void;
@@ -124,17 +124,17 @@ export function DefinitelyAction({
 							i % 2 === 1
 								? {
 										details: actionDetails.Parameters!.find(p => p.Key === el)!,
-										value: actionOutput.WFWorkflowActionParameters![el]
+										value: actionOutput.WFWorkflowActionParameters![el],
 								  }
-								: el
+								: el,
 					  )
 					: []
 				: [],
 		[
 			actionDetails.ParameterSummary,
 			actionDetails.Parameters,
-			actionOutput.WFWorkflowActionParameters
-		]
+			actionOutput.WFWorkflowActionParameters,
+		],
 	);
 	let updateParameter = useCallback<UpdateParametersCallback>(
 		(key, newParameter) =>
@@ -142,16 +142,16 @@ export function DefinitelyAction({
 				...actionOutput,
 				WFWorkflowActionParameters: {
 					...actionOutput.WFWorkflowActionParameters,
-					[key]: newParameter
-				}
+					[key]: newParameter,
+				},
 			}),
-		[actionOutput, setActionOutput]
+		[actionOutput, setActionOutput],
 	);
 	let remainingParameters = actionDetails.Parameters
 		? actionDetails.Parameters!.filter(param =>
 				parameterSummary.every(item =>
-					typeof item === "string" ? true : param.Key !== item.details.Key
-				)
+					typeof item === "string" ? true : param.Key !== item.details.Key,
+				),
 		  )
 		: [];
 
@@ -177,8 +177,8 @@ export function DefinitelyAction({
 			{
 				jumpTo: () => {
 					selfRef.current!.scrollIntoView({ behavior: "smooth" });
-				}
-			}
+				},
+			},
 		);
 	}
 	let showCode = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowCode"];
@@ -205,7 +205,7 @@ export function DefinitelyAction({
 					onCollapseClick={() =>
 						updateParameter(
 							"__ScPLIndentCollapsed",
-							!actionOutput.WFWorkflowActionParameters!.__ScPLIndentCollapsed
+							!actionOutput.WFWorkflowActionParameters!.__ScPLIndentCollapsed,
 						)
 					}
 				/>
@@ -251,8 +251,8 @@ export function DefinitelyAction({
 														],
 														resource.WFParameterRelation || "==",
 														(resource as any).WFParameterValues || [
-															(resource as any).WFParameterValue
-														]
+															(resource as any).WFParameterValue,
+														],
 													)
 												) {
 													return true;
@@ -285,7 +285,7 @@ export function ActionTitle({
 	icon,
 	name,
 	onAboutClick,
-	onCollapseClick
+	onCollapseClick,
 }: {
 	icon: BuiltinIcon;
 	name: string;

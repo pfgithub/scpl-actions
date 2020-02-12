@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { ShortcutsDictionaryParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import {
 	WFDictionaryParameter,
-	WFTextParameter
+	WFTextParameter,
 } from "shortcuts3types/built/src/OutputData";
 import { cssdata, ParameterProps } from "../ShortcutViewer";
 import { Icon, IconButton } from "../Icon";
@@ -44,7 +44,7 @@ export function ShortcutsDictionaryParameter({
 	parameters,
 	updateParameter,
 	visible,
-	shortcut
+	shortcut,
 }: ParameterProps<ShortcutsDictionaryParameterSpec>) {
 	let paramValue = parameters[paramKey] as WFDictionaryParameter;
 	let [fakeItems, setFakeItems] = useState<DictionaryParameterValueType[]>(
@@ -56,14 +56,14 @@ export function ShortcutsDictionaryParameter({
 								key: i.WFKey,
 								uid: "" + index,
 								type: "string",
-								value: i.WFValue
+								value: i.WFValue,
 							};
 						} else {
 							return (undefined as unknown) as DictionaryParameterValueType;
 						}
-					}
+					},
 			  )
-			: []
+			: [],
 	);
 	let [dragging, setDragging] = useState<
 		| {
@@ -119,13 +119,13 @@ export function ShortcutsDictionaryParameter({
 												Math.max(
 													dragging!.position,
 													-44 * +cssdata.scale -
-														dragging!.startIndex * 88 * +cssdata.scale
+														dragging!.startIndex * 88 * +cssdata.scale,
 												),
 												fakeItems.length * 88 * +cssdata.scale +
 													44 * +cssdata.scale -
-													dragging!.startIndex * 88 * +cssdata.scale
+													dragging!.startIndex * 88 * +cssdata.scale,
 											) +
-											"px)"
+											"px)",
 								  }
 								: dragging
 								? {
@@ -136,7 +136,7 @@ export function ShortcutsDictionaryParameter({
 												: i <= dragging.startIndex && i >= dragging.index
 												? 88 * +cssdata.scale
 												: 0) +
-											"px)"
+											"px)",
 								  }
 								: {}
 						}
@@ -184,8 +184,8 @@ export function ShortcutsDictionaryParameter({
 										position: 0,
 										startIndex: i,
 										index: i,
-										dragging: true
-									})
+										dragging: true,
+									}),
 								);
 								let lastPos = e.clientY;
 								let lastOffset = 0;
@@ -198,11 +198,11 @@ export function ShortcutsDictionaryParameter({
 									let realPosition = i * 88 * +cssdata.scale;
 									let newRealPosition = realPosition + currentOffset;
 									let newExpectedIndex = Math.round(
-										newRealPosition / (88 * +cssdata.scale)
+										newRealPosition / (88 * +cssdata.scale),
 									);
 									newExpectedIndex = Math.max(
 										Math.min(newExpectedIndex, fakeItems.length - 1),
-										0
+										0,
 									);
 									setDragging(
 										(dragging = {
@@ -210,8 +210,8 @@ export function ShortcutsDictionaryParameter({
 											position: currentOffset,
 											startIndex: dragging!.startIndex,
 											index: newExpectedIndex,
-											dragging: true
-										})
+											dragging: true,
+										}),
 									);
 									lastOffset = currentOffset;
 									lastPos = e.clientY;
@@ -228,8 +228,8 @@ export function ShortcutsDictionaryParameter({
 											+cssdata.scale,
 										startIndex: dragging!.startIndex,
 										index: newExpectedIndex,
-										dragging: false
-									})
+										dragging: false,
+									}),
 								);
 								await new Promise(r => setTimeout(r, 100));
 								if (newExpectedIndex !== dragging!.startIndex) {
@@ -237,7 +237,7 @@ export function ShortcutsDictionaryParameter({
 									fakeItemsCopy.splice(
 										newExpectedIndex,
 										0,
-										...fakeItemsCopy.splice(dragging!.startIndex, 1)
+										...fakeItemsCopy.splice(dragging!.startIndex, 1),
 									);
 									setFakeItems(fakeItemsCopy);
 									fakeItems = fakeItemsCopy;
@@ -266,7 +266,7 @@ export function ShortcutsDictionaryParameter({
 						>
 							Delete
 						</button>
-					</ParameterBase>
+					</ParameterBase>,
 				];
 			})}
 			<ParameterBase
@@ -279,7 +279,7 @@ export function ShortcutsDictionaryParameter({
 						key: "" + Math.random(),
 						type: "string",
 						value: "" + Math.random(),
-						uid: "" + Math.random()
+						uid: "" + Math.random(),
 					});
 					setFakeItems(fakeItemsCopy);
 				}}

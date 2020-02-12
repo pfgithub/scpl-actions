@@ -9,7 +9,7 @@ export function ExpansionParameter({
 	data,
 	parameters,
 	updateParameter,
-	visible
+	visible,
 }: ParameterProps<ShortcutsExpandingParameterSpec>) {
 	return (
 		<LabeledParameterBase

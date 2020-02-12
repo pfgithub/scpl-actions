@@ -299,5 +299,5 @@ export const BuiltinIconValueMap: { [key in BuiltinIcon]: string } = {
 	"ZZZZPackedAsset-2.0.png": i92,
 	"ZZZZPackedAsset-3.0_Normal@3x.png": i93,
 	"NoIcon.png":
-		"https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Red_x.svg/600px-Red_x.svg.png"
+		"https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Red_x.svg/600px-Red_x.svg.png",
 };

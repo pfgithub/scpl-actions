@@ -8,7 +8,7 @@ export function ActionFullWidthShowMoreParameter({
 	paramKey,
 	parameters,
 	updateParameter,
-	visible
+	visible,
 }: {
 	paramKey: string;
 	parameters: WFParameters;
