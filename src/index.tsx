@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 // import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import CSSDemo from "./demo/CSSDemo";
+import ShortcutViewer from "./ShortcutViewer";
 
 if ("PointerEvent" in window) {
 } else {
@@ -11,10 +11,9 @@ if ("PointerEvent" in window) {
 	import("pepjs");
 }
 
-ReactDOM.render(<CSSDemo />, document.getElementById("root"));
-// ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<ShortcutViewer />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register();

@@ -1,6 +1,6 @@
 import React from "react";
 import { ShortcutsExpandingParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { ParameterProps } from "../CSSDemo";
+import { ParameterProps } from "../ShortcutViewer";
 import { Icon } from "../Icon";
 import { LabeledParameterBase } from "./Parameter";
 

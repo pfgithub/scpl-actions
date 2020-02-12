@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { ShortcutsParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { ParameterProps, ErrorBoundary } from "../CSSDemo";
+import { ParameterProps, ErrorBoundary } from "../ShortcutViewer";
 import { ActionFullWidthShowMoreParameter } from "./ActionFullWidthShowMoreParameter";
 import { EnumParameter } from "./EnumParameter";
 import { ErrorParameter } from "./ErrorParameter";

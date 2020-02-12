@@ -4,7 +4,7 @@ import {
 	WFDictionaryParameter,
 	WFTextParameter
 } from "shortcuts3types/built/src/OutputData";
-import { cssdata, ParameterProps } from "../CSSDemo";
+import { cssdata, ParameterProps } from "../ShortcutViewer";
 import { Icon, IconButton } from "../Icon";
 import { startDragWatcher } from "../util";
 import { ParameterBase } from "./Parameter";

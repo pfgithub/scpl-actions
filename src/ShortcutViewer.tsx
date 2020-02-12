@@ -8,7 +8,7 @@ import {
 } from "shortcuts3types/built/src/OutputData";
 import uuidv4 from "uuid/v4";
 //@ts-ignore
-import * as cssexported from "./CSSDemo.scss";
+import * as cssexported from "./ShortcutViewer.scss";
 import { Action, UpdateParametersCallback } from "./parameters/Action";
 import { useFetch } from "./useFetch";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -71,18 +71,31 @@ export default function Loader(props: {}) {
 				</div>
 			);
 		}
-		let parsedBuffer = bplistparser.parseBuffer<WFShortcut>(
-			new Buffer(loadStatus.response)
-		);
+		let parsedBuffer: WFShortcut | undefined;
 
-		console.log("LOAD STATE IS LOADED. THIS SHOULD NEVER UPDATE.");
+		try {
+			parsedBuffer = bplistparser.parseBuffer<WFShortcut>(
+				new Buffer(loadStatus.response)
+			);
+		} catch (e) {
+			parsedBuffer = undefined;
+			console.log(loadStatus.response);
+			console.log(fileUrlToLoad);
+			alert("failed to load");
+		}
 
-		return (
-			<ShortcutViewerEditor
-				shortcut={parsedBuffer}
-				meta={{ name: "Unknown" }}
-			/>
-		);
+		if (parsedBuffer) {
+			console.log("LOAD STATE IS LOADED. THIS SHOULD NEVER UPDATE.");
+
+			return (
+				<ShortcutViewerEditor
+					shortcut={parsedBuffer}
+					meta={{ name: "Unknown" }}
+				/>
+			);
+		} else {
+			return <div>Error!</div>;
+		}
 	}
 	return (
 		<div>

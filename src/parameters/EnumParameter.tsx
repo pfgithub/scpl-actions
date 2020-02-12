@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { ShortcutsEnumerationParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
-import { ParameterProps } from "../CSSDemo";
+import { ParameterProps } from "../ShortcutViewer";
 import { LabeledParameterBase } from "./Parameter";
 import { ShortcutsSerializationTypeRender } from "./ShortcutsSerializationTypeRender";
 

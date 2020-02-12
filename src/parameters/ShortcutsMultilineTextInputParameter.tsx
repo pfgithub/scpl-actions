@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { ShortcutsTextInputParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
 import { WFTextParameter } from "shortcuts3types/built/src/OutputData";
-import { ParameterProps } from "../CSSDemo";
+import { ParameterProps } from "../ShortcutViewer";
 import { Highlight } from "../Highlight";
 import { ParameterBase } from "./Parameter";
 

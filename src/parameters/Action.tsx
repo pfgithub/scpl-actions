@@ -13,7 +13,7 @@ import {
 import { ActionParameterSummary } from "./Summary";
 import { BuiltinIcon } from "../icons";
 import { ShortcutData } from "./ShortcutData";
-import { ErrorBoundary } from "../CSSDemo";
+import { ErrorBoundary } from "../ShortcutViewer";
 
 export type UpdateParametersCallback = (
 	key: string,
