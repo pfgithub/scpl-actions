@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { getActionFromID } from "shortcuts3types/built/src/ActionData";
 import { ShortcutsActionSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsActionSpec";
 import { ShortcutsParameterSpec } from "shortcuts3types/built/src/Data/ActionDataTypes/ShortcutsParameterSpec";
@@ -26,15 +26,16 @@ export type ParameterSummaryItem =
 
 export function Action({
 	actionOutput,
-	setActionOutput,
+	setActionOutputNoRerender,
 	indentLevel,
 	shortcut,
 }: {
 	actionOutput: WFAction;
-	setActionOutput: (val: WFAction) => void;
+	setActionOutputNoRerender: (val: WFAction) => void;
 	indentLevel: number;
 	shortcut: ShortcutData;
 }): JSX.Element {
+	let [fakeActionOutput, setFakeActionOutput] = useState(actionOutput);
 	let identifier = actionOutput.WFWorkflowActionIdentifier;
 	let _tempAction = getActionFromID(identifier);
 	if (!_tempAction) {
@@ -42,8 +43,11 @@ export function Action({
 	}
 	return (
 		<DefinitelyAction
-			actionOutput={actionOutput}
-			setActionOutput={setActionOutput}
+			actionOutput={fakeActionOutput}
+			setActionOutput={v => {
+				setActionOutputNoRerender(v);
+				setFakeActionOutput(v);
+			}}
 			actionDetails={_tempAction._data}
 			indentLevel={indentLevel}
 			shortcut={shortcut}

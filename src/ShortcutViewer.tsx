@@ -4,7 +4,7 @@ import { ShortcutsBaseParameterSpec } from "shortcuts3types/built/src/Data/Actio
 import {
 	WFAction,
 	WFParameters,
-	WFShortcut
+	WFShortcut,
 } from "shortcuts3types/built/src/OutputData";
 import uuidv4 from "uuid/v4";
 //@ts-ignore
@@ -55,7 +55,7 @@ let fileUrlToLoad = icloudUrlToLoad
 export default function Loader(props: {}) {
 	let [loadStatus, startLoad] = useFetch(
 		{ start: "later", get: "arraybuffer" },
-		fileUrlToLoad || "none"
+		fileUrlToLoad || "none",
 	);
 	let [showFinal, setShowFinal] = useState(false);
 	if (loadStatus.state === "none") {
@@ -75,7 +75,7 @@ export default function Loader(props: {}) {
 
 		try {
 			parsedBuffer = bplistparser.parseBuffer<WFShortcut>(
-				new Buffer(loadStatus.response)
+				new Buffer(loadStatus.response),
 			);
 		} catch (e) {
 			parsedBuffer = undefined;
@@ -112,7 +112,7 @@ export default function Loader(props: {}) {
 
 export function ShortcutViewerEditor({
 	shortcut,
-	meta
+	meta,
 }: {
 	shortcut: WFShortcut;
 	meta: { name: string };
@@ -131,7 +131,7 @@ export function ShortcutViewerEditor({
 				action.WFWorkflowActionParameters.UUID = action.WFWorkflowActionParameters.UUID.toLowerCase();
 			});
 			return shortcut;
-		}, [shortcut])
+		}, [shortcut]),
 	);
 	let [editedShortcutJSON, setEditedShortcutJSON] = useState("");
 	useEffect(() => {
@@ -158,7 +158,7 @@ export function ShortcutViewerEditor({
 		shortcutData.setActionForUUID(uid, {
 			data: action,
 			spec: _tempAction ? _tempAction._data : undefined,
-			jumpTo: () => alert("Not Initialized")
+			jumpTo: () => alert("Not Initialized"),
 		}); // TODO maybe set index to show if a variable exists or is broken?
 	});
 
@@ -168,7 +168,7 @@ export function ShortcutViewerEditor({
 				<div className="shortcutnameboundingbox">
 					<div className={"shortcutnameicon " + iconExpectedColor}>
 						{String.fromCodePoint(
-							editedShortcut[0].WFWorkflowIcon.WFWorkflowIconGlyphNumber
+							editedShortcut[0].WFWorkflowIcon.WFWorkflowIconGlyphNumber,
 						)}
 					</div>
 				</div>
@@ -184,7 +184,7 @@ export function ShortcutViewerEditor({
 							indentLevel++;
 							indentIsCollapsed.unshift(
 								thisIsCollapsed ||
-									!!action.WFWorkflowActionParameters!.__ScPLIndentCollapsed
+									!!action.WFWorkflowActionParameters!.__ScPLIndentCollapsed,
 							);
 						} else if (controlFlowMode === 1) {
 							thisIndentLevel--;
@@ -192,7 +192,7 @@ export function ShortcutViewerEditor({
 							thisIsCollapsed = indentIsCollapsed[0];
 							indentIsCollapsed.unshift(
 								thisIsCollapsed ||
-									!!action.WFWorkflowActionParameters!.__ScPLIndentCollapsed
+									!!action.WFWorkflowActionParameters!.__ScPLIndentCollapsed,
 							);
 						} else if (controlFlowMode === 2) {
 							indentLevel--;
@@ -220,17 +220,8 @@ export function ShortcutViewerEditor({
 							>
 								<Action
 									actionOutput={action}
-									setActionOutput={newAction => {
-										let copiedActions = [
-											...editedShortcut[0].WFWorkflowActions
-										];
-										copiedActions[i] = newAction;
-										setEditedShortcut([
-											{
-												...editedShortcut[0],
-												WFWorkflowActions: copiedActions
-											}
-										]);
+									setActionOutputNoRerender={newAction => {
+										editedShortcut[0].WFWorkflowActions[i] = newAction;
 									}}
 									indentLevel={thisIndentLevel}
 									shortcut={shortcutData}
