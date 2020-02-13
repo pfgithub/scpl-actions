@@ -20,7 +20,33 @@ export function ShortcutsErrorRender({
 }) {
 	return (
 		<span className="error">
-			<code>{JSON.stringify(value)}</code>
+			Not implemented yet: {(value as any).WFSerializationType}.{" "}
+			<button
+				onClick={() => {
+					let text = JSON.stringify(value, null, "\t");
+					const myWindow = window.open("", "_blank", "location=no");
+					if (!myWindow) {
+						alert("Failed to open window.");
+						return;
+					}
+					const codeTag = myWindow.document.createElement("textarea");
+					codeTag.setAttribute("id", "hello");
+					codeTag.setAttribute(
+						"style",
+						"position:fixed;top:0;left:0;width:100%;height:100%;",
+					);
+					codeTag.value = text;
+					myWindow.document.body.appendChild(codeTag);
+					const textarea = codeTag;
+					const range = myWindow.document.createRange();
+					range.selectNode(textarea);
+					const selection = myWindow.getSelection();
+					selection && selection.addRange(range);
+					textarea.select();
+				}}
+			>
+				View JSON
+			</button>
 		</span>
 	);
 }

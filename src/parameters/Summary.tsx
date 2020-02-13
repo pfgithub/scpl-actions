@@ -7,6 +7,7 @@ import {
 	WFParameters,
 	WFTextParameter,
 	WFAttachmentParameter,
+	WFParameter,
 } from "shortcuts3types/built/src/OutputData";
 import { ParameterSummaryItem, UpdateParametersCallback } from "./Action";
 import { ShortcutsTextRender } from "./ShortcutsTextRender";
@@ -27,7 +28,10 @@ export function ParameterSummaryItemComponent({
 	if (typeof item === "string") {
 		return <React.Fragment>{item}</React.Fragment>;
 	}
-	if (item.details.Class === "WFTextInputParameter") {
+	if (
+		item.details.Class === "WFTextInputParameter" ||
+		item.details.Class === "WFVariableFieldParameter"
+	) {
 		let parameterValue = parameters[item.details.Key] as WFTextParameter;
 		return (
 			<SummaryTextInput
@@ -51,7 +55,14 @@ export function ParameterSummaryItemComponent({
 			/>
 		);
 	}
-	return <div className="error">Unsupported class {item.details.Class}</div>;
+	return (
+		<SummaryAnyRender
+			data={item.details}
+			value={item.value}
+			onChange={v => updateParameter(item.details.Key, v)}
+			shortcut={shortcut}
+		/>
+	);
 }
 
 export function ActionParameterSummary({
@@ -140,6 +151,20 @@ export function SummaryTextInput({
 			}} // !!!!bad
 		/>
 	);
+}
+
+export function SummaryAnyRender({
+	data,
+	value,
+	onChange,
+	shortcut,
+}: {
+	data: ShortcutsTextInputParameterSpec;
+	value: WFParameter;
+	onChange: (v: WFTextParameter) => void;
+	shortcut: ShortcutData;
+}) {
+	return <ShortcutsSerializationTypeRender shortcut={shortcut} value={value} />;
 }
 
 export function SummaryStepperParameter({

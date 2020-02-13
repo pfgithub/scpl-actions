@@ -8,7 +8,7 @@ import { Icon, IconButton, IconString, ActionIcon } from "../Icon";
 import {
 	ActionFullWidthShowMoreParameter,
 	Parameter,
-	ErrorParameter,
+	AnyParameter,
 } from "./Parameter";
 import { ActionParameterSummary } from "./Summary";
 import { BuiltinIcon } from "../icons";
@@ -42,8 +42,23 @@ export const Action = React.memo(
 		if (!_tempAction) {
 			return <>"error action not found with name " + {identifier}</>;
 		}
+		let selfRef = useRef<HTMLDivElement>(null);
+		if (selfRef.current) {
+			console.log("UPDATE ACTION FOR UUID!");
+			shortcut.updateActionForUUID(
+				actionOutput.WFWorkflowActionParameters!.UUID as string,
+				{
+					jumpTo: () => {
+						selfRef.current!.scrollIntoView({ behavior: "smooth" });
+					},
+				},
+			);
+		}
 		return (
-			<div className={`actionwrapper indent${Math.min(indentLevel, 4)} `}>
+			<div
+				className={`actionwrapper indent${Math.min(indentLevel, 4)} `}
+				ref={selfRef}
+			>
 				<DefinitelyAction
 					actionOutput={fakeActionOutput}
 					setActionOutput={v => {
@@ -178,22 +193,10 @@ export const DefinitelyAction = React.memo(
 		let showMore = useShowMoreButton
 			? !!actionOutput.WFWorkflowActionParameters!["__ScPLShowMore"]
 			: true;
-		let selfRef = useRef<HTMLDivElement>(null);
-		if (selfRef.current) {
-			shortcut.updateActionForUUID(
-				actionOutput.WFWorkflowActionParameters!.UUID as string,
-				{
-					jumpTo: () => {
-						selfRef.current!.scrollIntoView({ behavior: "smooth" });
-					},
-				},
-			);
-		}
 		let showCode = !!actionOutput.WFWorkflowActionParameters!["__ScPLShowCode"];
 		return (
 			<>
 				<div
-					ref={selfRef}
 					className={
 						"action " +
 						(actionDetails.ActionClass === "WFCommentAction" ? "comment " : "")

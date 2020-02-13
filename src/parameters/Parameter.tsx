@@ -3,7 +3,7 @@ import { ShortcutsParameterSpec } from "shortcuts3types/built/src/Data/ActionDat
 import { ParameterProps, ErrorBoundary } from "../ShortcutViewer";
 import { ActionFullWidthShowMoreParameter } from "./ActionFullWidthShowMoreParameter";
 import { EnumParameter } from "./EnumParameter";
-import { ErrorParameter } from "./ErrorParameter";
+import { AnyParameter } from "./AnyParameter";
 import { ExpansionParameter } from "./ExpansionParameter";
 import { ShortcutsDictionaryParameter } from "./ShortcutsDictionaryParameter";
 import { ShortcutsMultilineTextInputParameter } from "./ShortcutsMultilineTextInputParameter";
@@ -11,7 +11,7 @@ import { ShortcutsMultilineTextInputParameter } from "./ShortcutsMultilineTextIn
 export {
 	EnumParameter,
 	ExpansionParameter,
-	ErrorParameter,
+	AnyParameter,
 	ActionFullWidthShowMoreParameter,
 	ShortcutsMultilineTextInputParameter,
 };
@@ -19,7 +19,7 @@ export {
 export function Parameter(p: ParameterProps<ShortcutsParameterSpec>) {
 	return (
 		<ErrorBoundary
-			error={e => <ErrorParameter {...p} error={e.toString()}></ErrorParameter>}
+			error={e => <AnyParameter {...p} error={e.toString()}></AnyParameter>}
 		>
 			<RealParameter {...p}></RealParameter>
 		</ErrorBoundary>
@@ -80,7 +80,7 @@ export function RealParameter({
 		);
 	} else {
 		return (
-			<ErrorParameter
+			<AnyParameter
 				paramKey={paramKey}
 				data={data}
 				parameters={parameters}
