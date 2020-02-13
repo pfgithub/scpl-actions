@@ -104,7 +104,7 @@ export function SummaryTextInput({
 		return JSON.stringify(value);
 	};
 	let unmakeEditingValue = (v: string): WFTextParameter => {
-		return v;
+		return JSON.parse(v);
 	};
 
 	if (editingValue === undefined) {

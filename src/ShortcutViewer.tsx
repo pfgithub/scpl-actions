@@ -152,6 +152,8 @@ export function ShortcutViewerEditor({
 
 	let shortcutData: ShortcutData = new ShortcutData();
 
+	let [rerender, setRerender] = useState(0);
+
 	editedShortcut[0].WFWorkflowActions.map((action, i) => {
 		let uid = action.WFWorkflowActionParameters!.UUID as string;
 		let _tempAction = getActionFromID(action.WFWorkflowActionIdentifier);
@@ -172,64 +174,99 @@ export function ShortcutViewerEditor({
 						)}
 					</div>
 				</div>
-				{editedShortcut[0].WFWorkflowActions.map((action, i) => {
-					let key = action.WFWorkflowActionParameters!.UUID;
+				{useMemo(
+					() =>
+						editedShortcut[0].WFWorkflowActions.map((action, i) => {
+							let key = action.WFWorkflowActionParameters!.UUID;
 
-					let controlFlowMode = action.WFWorkflowActionParameters!
-						.WFControlFlowMode;
-					let thisIndentLevel = indentLevel;
-					let thisIsCollapsed = indentIsCollapsed[0];
-					if (controlFlowMode !== undefined) {
-						if (controlFlowMode === 0) {
-							indentLevel++;
-							indentIsCollapsed.unshift(
-								thisIsCollapsed ||
-									!!action.WFWorkflowActionParameters!.__ScPLIndentCollapsed,
+							let controlFlowMode = action.WFWorkflowActionParameters!
+								.WFControlFlowMode;
+							let thisIndentLevel = indentLevel;
+							let thisIsCollapsed = indentIsCollapsed[0];
+							let thisDefaultCollapseMode = !!(action.WFWorkflowActionParameters!
+								.__ScPLIndentCollapsed === undefined
+								? true
+								: action.WFWorkflowActionParameters!.__ScPLIndentCollapsed);
+							let collapseClose:
+								| { actionCount: number; indent: number }
+								| undefined;
+							if (controlFlowMode !== undefined) {
+								if (controlFlowMode === 0) {
+									indentLevel++;
+									indentIsCollapsed.unshift(
+										thisIsCollapsed || thisDefaultCollapseMode,
+									);
+								} else if (controlFlowMode === 1) {
+									thisIndentLevel--;
+									let wasClosed = indentIsCollapsed.shift();
+									thisIsCollapsed = indentIsCollapsed[0];
+									if (wasClosed) {
+										collapseClose = {
+											indent: indentIsCollapsed.length + 1,
+											actionCount: -1,
+										};
+									}
+									indentIsCollapsed.unshift(
+										thisIsCollapsed || thisDefaultCollapseMode,
+									);
+								} else if (controlFlowMode === 2) {
+									indentLevel--;
+									thisIndentLevel = indentLevel;
+									let wasClosed = indentIsCollapsed.shift();
+									thisIsCollapsed = indentIsCollapsed[0];
+									if (wasClosed) {
+										collapseClose = {
+											indent: indentIsCollapsed.length + 1,
+											actionCount: -1,
+										};
+									}
+								}
+							}
+							if (thisIsCollapsed) {
+								return null;
+							}
+							return (
+								<React.Fragment key={"" + key}>
+									{collapseClose ? (
+										<>
+											<div className="connector space" />
+											<div className={"action indent" + collapseClose.indent}>
+												{collapseClose.actionCount} actions collapsed.{" "}
+												<button>View actions</button>
+											</div>
+										</>
+									) : null}
+									<div className="connector space" />
+									<ErrorBoundary
+										error={e => (
+											<div className={"action indent" + thisIndentLevel}>
+												<pre className="error">
+													<code>
+														{e.name + ": " + e.message + "\n\n" + e.stack}
+													</code>
+												</pre>
+											</div>
+										)}
+									>
+										<Action
+											actionOutput={action}
+											setActionOutputNoRerender={newAction => {
+												editedShortcut[0].WFWorkflowActions[i] = newAction;
+												setRerender(rerender + 1);
+											}}
+											indentLevel={thisIndentLevel}
+											shortcut={shortcutData}
+										/>
+									</ErrorBoundary>
+								</React.Fragment>
 							);
-						} else if (controlFlowMode === 1) {
-							thisIndentLevel--;
-							indentIsCollapsed.shift();
-							thisIsCollapsed = indentIsCollapsed[0];
-							indentIsCollapsed.unshift(
-								thisIsCollapsed ||
-									!!action.WFWorkflowActionParameters!.__ScPLIndentCollapsed,
-							);
-						} else if (controlFlowMode === 2) {
-							indentLevel--;
-							thisIndentLevel = indentLevel;
-							indentIsCollapsed.shift();
-							thisIsCollapsed = indentIsCollapsed[0];
-						}
-					}
-					if (thisIsCollapsed) {
-						return null;
-					}
-					return (
-						<React.Fragment key={"" + key}>
-							<div className="connector space" />
-							<ErrorBoundary
-								error={e => (
-									<div className="action">
-										<pre className="error">
-											<code>
-												{e.name + ": " + e.message + "\n\n" + e.stack}
-											</code>
-										</pre>
-									</div>
-								)}
-							>
-								<Action
-									actionOutput={action}
-									setActionOutputNoRerender={newAction => {
-										editedShortcut[0].WFWorkflowActions[i] = newAction;
-									}}
-									indentLevel={thisIndentLevel}
-									shortcut={shortcutData}
-								/>
-							</ErrorBoundary>
-						</React.Fragment>
-					);
-				})}
+						}),
+					//eslint-disable-next-line react-hooks/exhaustive-deps
+					[
+						//eslint-disable-next-line react-hooks/exhaustive-deps
+						editedShortcut[0].WFWorkflowActions,
+					],
+				)}
 				<div className="connector space" />
 				<div className="action">
 					<textarea
